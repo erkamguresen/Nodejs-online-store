@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <title>My Shop</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed">
+      <div class="container">
+        <a href="/" class="navbar-brand">Shopping</a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="">Register</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container pt-100">
+      <div class="row">
+        <div class="col-lg-3">
+          <div class="list-group">
+            <div class="list-group-item">Category 1</div>
+            <div class="list-group-item">Category 2</div>
+            <div class="list-group-item">Category 3</div>
+          </div>
+        </div>
+        <div class="col-lg-9">
+          <!-- carousel -->
+          <div id="mySlider" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+              <button
+                type="button"
+                data-bs-target="#mySlider"
+                data-bs-slide-to="0"
+                class="active"
+                aria-current="true"
+                aria-label="Slide 1"
+              ></button>
+              <button
+                type="button"
+                data-bs-target="#mySlider"
+                data-bs-slide-to="1"
+                aria-label="Slide 2"
+              ></button>
+              <button
+                type="button"
+                data-bs-target="#mySlider"
+                data-bs-slide-to="2"
+                aria-label="Slide 3"
+              ></button>
+            </div>
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <!-- src="http://placehold.it/900x350" -->
+                <img src="/img/slider1.png" class="d-block w-100" alt="..." />
+              </div>
+              <div class="carousel-item">
+                <!-- src="https://www.fillmurray.com/900/350" -->
+                <img src="/img/slider2.png" class="d-block w-100" alt="..." />
+              </div>
+              <div class="carousel-item">
+                <!-- src="https://loremflickr.com/900/350" -->
+                <img src="/img/slider3.png" class="d-block w-100" alt="..." />
+              </div>
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#mySlider"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#mySlider"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+
+          <!-- product cards -->
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card my-3">
+                <img src="/img/1.jpg" alt="" class="card-img-top" />
+                <div class="card-body">
+                  <h4 class="card-title">
+                    <a href="#">Product Name</a>
+                    <p class="card-text pt-2">Lorem ipsum dolor sit.</p>
+                  </h4>
+                </div>
+                <div class="card-footer">
+                  <small class="text-muted">
+                    <i class="fas fa-euro-sign"></i> 100
+                  </small>
+                  <a href="#" class="btn btn-secondary btn-sm float-end"
+                    ><i class="fa fa-angle-double-right"></i>Details</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card my-3">
+                <img src="/img/2.jpg" alt="" class="card-img-top" />
+                <div class="card-body">
+                  <h4 class="card-title">
+                    <a href="#">Product Name</a>
+                    <p class="card-text pt-2">Lorem ipsum dolor sit.</p>
+                  </h4>
+                </div>
+                <div class="card-footer">
+                  <small class="text-muted">
+                    <i class="fas fa-euro-sign"> </i> 100
+                  </small>
+                  <a href="#" class="btn btn-secondary btn-sm float-end"
+                    ><i class="fa fa-angle-double-right"></i>Details</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card my-3">
+                <img src="/img/3.jpg" alt="" class="card-img-top" />
+                <div class="card-body">
+                  <h4 class="card-title">
+                    <a href="#">Product Name</a>
+                    <p class="card-text pt-2">Lorem ipsum dolor sit.</p>
+                  </h4>
+                </div>
+                <div class="card-footer">
+                  <small class="text-muted">
+                    <i class="fas fa-euro-sign"></i> 100
+                  </small>
+                  <a href="#" class="btn btn-secondary btn-sm float-end"
+                    ><i class="fa fa-angle-double-right"></i>Details</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card my-3">
+                <img src="/img/4.jpg" alt="" class="card-img-top" />
+                <div class="card-body">
+                  <h4 class="card-title">
+                    <a href="#">Product Name</a>
+                    <p class="card-text pt-2">Lorem ipsum dolor sit.</p>
+                  </h4>
+                </div>
+                <div class="card-footer">
+                  <small class="text-muted">
+                    <i class="fas fa-euro-sign"></i> 100
+                  </small>
+                  <a href="#" class="btn btn-secondary btn-sm float-end"
+                    ><i class="fa fa-angle-double-right"></i>Details</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
