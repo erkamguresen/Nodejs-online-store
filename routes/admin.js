@@ -5,7 +5,7 @@ const path = require("path");
 
 router.get("/addproduct", (req, res, next) => {
   //   res.sendFile(path.join(__dirname, "../views/add-product.html"));
-  res.render("add-product");
+  res.render("add-product", { title: "Add Product" });
 });
 
 router.post("/addproduct", (req, res, next) => {

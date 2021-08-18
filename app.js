@@ -20,13 +20,9 @@ app.use("/admin", adminRoutes);
 
 app.use(userRoutes);
 
-//can delete later
-app.set("title", "My Site");
-console.log(app.get("title"));
-
 app.use((req, res) => {
   // res.status(404).sendFile(path.join(__dirname, "./views/404.html"));
-  res.status(404).render("404");
+  res.status(404).render("404", { title: "Page Not Found" });
 });
 
 app.listen(3000, () => {
