@@ -1,0 +1,13 @@
+mixin createProduct(product)
+    .col-md-4
+                    .card.my-3
+                        img.card-img-top(src=`/img/${product.image}` alt=`${product.description}`)
+                        .card-body
+                        h4.card-title
+                            a(href="#") #{product.name}
+                            p.card-text.pt-2 #{product.description}                               
+                        .card-footer.py-3
+                            small.text-muted
+                                i.fas.fa-euro-sign #{product.price}
+                            a(href="#").btn.btn-secondary.btn-sm.float-end
+                                i.fa.fa-angle-double-right Details
