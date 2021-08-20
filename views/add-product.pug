@@ -5,12 +5,31 @@ block styles
 
 block content
     form(method="post" action="/admin/addproduct")
-        .form-group.row
-            label(for="productName").col-sm-2.col-form-label Name
+        .form-group.row.my-1
+            label(for="name").col-sm-2.col-form-label Product Name
             .col-sm-10
                 input(type="text" placeholder="Enter Product Name"
-                                name="productName").form-control#productName
-        .form-group.row
+                                name="name").form-control#name
+
+        .form-group.row.my-1
+            label(for="price").col-sm-2.col-form-label Price
+            .col-sm-10
+                input(type="text" placeholder="Enter Product Price"
+                                name="price").form-control#price
+
+        .form-group.row.my-1
+            label(for="image").col-sm-2.col-form-label Name
+            .col-sm-10
+                input(type="text" placeholder="Enter Product Image"
+                                name="image").form-control#image
+
+        .form-group.row.my-1
+            label(for="description").col-sm-2.col-form-label Description
+            .col-sm-10
+                input(type="text" placeholder="Enter Product Name"
+                                name="description").form-control#description                                                
+
+        .form-group.row.my-1
             .col-sm-3.offset-sm-2
                 input(type="submit" value="Save Product").btn.btn-primary
         
