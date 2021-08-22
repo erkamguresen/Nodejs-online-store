@@ -4,7 +4,7 @@ const app = express();
 const bodyParser = require("body-parser");
 
 const adminRoutes = require("./routes/admin");
-const userRoutes = require("./routes/user");
+const userRoutes = require("./routes/shop");
 
 const path = require("path");
 const errorController = require("./controllers/errors");
@@ -13,8 +13,6 @@ app.set("view engine", "pug");
 app.set("views", "./views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
-
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/admin", adminRoutes.routes);
