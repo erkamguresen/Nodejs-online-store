@@ -34,6 +34,7 @@ exports.getProductsByCategoryId = (req, res, next) => {
     title: "Products",
     products: products,
     categories: categories,
+    selectedCategory: categoryId,
     path: "/products",
   });
 };
