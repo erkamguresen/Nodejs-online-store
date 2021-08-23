@@ -4,7 +4,7 @@ const categories = [
   { id: "3", name: "Appliances", decription: "Appliances category products" },
 ];
 
-export class Category {
+module.exports = class Category {
   constructor(name, description) {
     this.id = (categories[categories.length - 1].id + 1).toString();
     this.name = name;
@@ -29,4 +29,4 @@ export class Category {
       categories[index] = category;
     }
   }
-}
+};

@@ -1,21 +1,26 @@
 const Product = require("../models/product");
+const Category = require("../models/category");
 
 exports.getIndex = (req, res, next) => {
   const products = Product.getAll();
+  const categories = Category.getAllCategories();
 
   res.render("shop/index", {
     title: "Shopping",
     products: products,
+    categories: categories,
     path: "/",
   });
 };
 
 exports.getProducts = (req, res, next) => {
   const products = Product.getAll();
+  const categories = Category.getAllCategories();
 
   res.render("shop/products", {
     title: "Products",
     products: products,
+    categories: categories,
     path: "/products",
   });
 };
