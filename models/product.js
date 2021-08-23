@@ -5,6 +5,7 @@ const products = [
     price: 700,
     imageURL: "1.jpg",
     description: "goed phone",
+    categoryId: "1",
   },
   {
     id: "66869",
@@ -12,6 +13,7 @@ const products = [
     price: 800,
     imageURL: "2.jpg",
     description: "very goed phone",
+    categoryId: "1",
   },
   {
     id: "66885",
@@ -19,6 +21,7 @@ const products = [
     price: 300,
     imageURL: "3.jpg",
     description: "it is a ok phone",
+    categoryId: "1",
   },
   {
     id: "21193",
@@ -26,6 +29,23 @@ const products = [
     price: 250,
     imageURL: "4.jpg",
     description: "just a phone nothing more complicated",
+    categoryId: "1",
+  },
+  {
+    id: "76885",
+    name: "Laptop",
+    price: 300,
+    imageURL: "3.jpg",
+    description: "it is a ok laptop",
+    categoryId: "2",
+  },
+  {
+    id: "51193",
+    name: "Fridge",
+    price: 250,
+    imageURL: "4.jpg",
+    description: "just a computer nothing more complicated",
+    categoryId: "3",
   },
 ];
 
@@ -48,6 +68,13 @@ module.exports = class Product {
 
   static getProductById(id) {
     const product = products.find((product) => product.id === id);
+    return product;
+  }
+
+  static getProductsByCategoryId(categoryId) {
+    const product = products.filter(
+      (product) => product.categoryId === categoryId
+    );
     return product;
   }
 
