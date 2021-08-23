@@ -1,15 +1,18 @@
 mixin createProduct(product)
     .col-md-4
-                    .card.my-3
-                        img.card-img-top(src=`/img/${product.imageURL}` alt=`${product.description}`)
-                        .card-body
-                            h4.card-title
-                                a(href="#") #{product.name}
+        .card.my-3
+            img.card-img-top(src=`/img/${product.imageURL}` alt=`${product.description}`)
+            .card-body
+                h4.card-title
+                    a(href=`/products/${product.id}`) #{product.name}
 
-                            p.card-text.pt-2 #{product.description}     
-                        
-                        .card-footer.py-3
-                            small.text-muted
-                                i.fas.fa-euro-sign #{product.price}
-                            a(href="#").btn.btn-outline-primary.btn-sm.float-end
-                                i.fa.fa-angle-double-right Add to Cart
+                p.card-text.pt-2 #{product.description}     
+                
+                small.text-muted
+                    i.fas.fa-euro-sign #{product.price}
+
+            .card-footer.text-center
+
+                a(href=`/products/${product.id}`).btn.btn-outline-primary.btn-sm.m-2 Details
+
+                a(href="#").btn.btn-outline-primary.btn-sm.m2 Add to Cart

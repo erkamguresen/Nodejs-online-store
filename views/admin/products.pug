@@ -18,7 +18,7 @@ block content
                             td #{product.name}
                             td #{product.price} €
                             td 
-                                a.btn.btn-primary.btn-sm(href='/details/1') Edit 
+                                a.btn.btn-primary.btn-sm(href=`/admin/products/${product.id}`) Edit 
         else 
             h1 No Products
 
