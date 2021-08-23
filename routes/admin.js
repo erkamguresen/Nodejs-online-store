@@ -13,4 +13,6 @@ router.get("/products", adminController.getProducts);
 
 router.post("/products", adminController.postEditProduct);
 
+router.post("/delete-product", adminController.postDeleteProduct);
+
 exports.routes = router;

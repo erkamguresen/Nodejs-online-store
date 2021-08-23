@@ -1,6 +1,9 @@
 extends ../layouts/main-layout.pug
 
 block content
+    if (action!==undefined && action === 'delete')
+        div.alert.alert-danger The product has been successfully deleted.
+
     if (action!==undefined && action === 'edit')
         div.alert.alert-success The product has been successfully updated.
 
@@ -21,7 +24,11 @@ block content
                             td #{product.name}
                             td #{product.price} €
                             td 
-                                a.btn.btn-primary.btn-sm(href=`/admin/products/${product.id}`) Edit 
+                                a.btn.btn-primary.btn-sm.m-2(href=`/admin/products/${product.id}`) Edit 
+
+                                form(action='/admin/delete-product' method='post')
+                                    input(type='hidden' name='id' value=`${product.id}`)
+                                    button(type='submit').btn.btn-danger.btn-sm.m-2 Delete
         else 
             h1 No Products
 
