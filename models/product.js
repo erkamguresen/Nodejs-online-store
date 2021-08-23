@@ -50,4 +50,12 @@ module.exports = class Product {
     const product = products.find((product) => product.id === id);
     return product;
   }
+
+  static updateProduct(product) {
+    const index = products.findIndex((data) => data.id === product.id);
+    console.log(products);
+    console.log(product);
+    console.log(products[index]);
+    products[index] = product;
+  }
 };

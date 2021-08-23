@@ -7,10 +7,10 @@ router.get("/add-product", adminController.getAddProduct);
 
 router.post("/add-product", adminController.postAddProduct);
 
-router.get("/edit-product", adminController.getEditProduct);
-
-router.post("/edit-product", adminController.postEditProduct);
+router.get("/products/:productId", adminController.getEditProduct);
 
 router.get("/products", adminController.getProducts);
+
+router.post("/products", adminController.postEditProduct);
 
 exports.routes = router;

@@ -31,12 +31,23 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getEditProduct = (req, res, next) => {
+  const product = Product.getProductById(req.params.productId);
+
   res.render("admin/edit-product", {
     title: "Edit Product",
-    path: "/admin/edit-product",
+    path: "/admin/products",
+    product: product,
   });
 };
 
 exports.postEditProduct = (req, res, next) => {
-  res.redirect("/");
+  const product = Product.getProductById(req.body.id);
+
+  product.name = req.body.name;
+  product.price = req.body.price;
+  product.imageURL = req.body.imageURL;
+  product.description = req.body.description;
+
+  Product.updateProduct(product);
+  res.redirect("/admin/products");
 };
