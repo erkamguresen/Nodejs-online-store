@@ -7,6 +7,7 @@ exports.getProducts = (req, res, next) => {
     title: "Admin Products",
     products: products,
     path: "/admin/products",
+    action: req.query.action,
   });
 };
 
@@ -49,5 +50,5 @@ exports.postEditProduct = (req, res, next) => {
   product.description = req.body.description;
 
   Product.updateProduct(product);
-  res.redirect("/admin/products");
+  res.redirect("/admin/products?action=edit");
 };
