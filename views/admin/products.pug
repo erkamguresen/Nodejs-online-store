@@ -12,16 +12,16 @@ block content
             table.table-bordered 
                 thead 
                     tr 
-                        th Image
+                        th(style='width:100px') Image
                         th Product Name
-                        th Price
-                        th
+                        th(style='width:150px') Price
+                        th(style='width:133px')
                 tbody
                     each product in products
                         tr 
                             td 
                                 img(src=`/img/${product.imageURL}` width='80')
-                            td #{product.name}
+                            td #{product.name}   
                             td #{product.price} €
                             td 
                                 a.btn.btn-primary.btn-sm.m-2(href=`/admin/products/${product.id}`) Edit 
