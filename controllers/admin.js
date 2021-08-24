@@ -1,4 +1,5 @@
 const Product = require("../models/product");
+const Category = require("../models/category");
 
 exports.getProducts = (req, res, next) => {
   const products = Product.getAll();
@@ -12,9 +13,12 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getAddProduct = (req, res, next) => {
+  const categories = Category.getAllCategories();
+
   res.render("admin/add-product", {
     title: "New Product",
     path: "/admin/add-product",
+    categories: categories,
   });
 };
 
@@ -23,7 +27,8 @@ exports.postAddProduct = (req, res, next) => {
     req.body.name,
     req.body.price,
     req.body.imageURL,
-    req.body.description
+    req.body.description,
+    req.body.categoryId
   );
 
   product.saveProduct();
@@ -33,11 +38,13 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.getEditProduct = (req, res, next) => {
   const product = Product.getProductById(req.params.productId);
+  const categories = Category.getAllCategories();
 
   res.render("admin/edit-product", {
     title: "Edit Product",
     path: "/admin/products",
     product: product,
+    categories: categories,
   });
 };
 
@@ -48,6 +55,7 @@ exports.postEditProduct = (req, res, next) => {
   product.price = req.body.price;
   product.imageURL = req.body.imageURL;
   product.description = req.body.description;
+  product.categoryId = req.body.categoryId;
 
   Product.updateProduct(product);
   res.redirect("/admin/products?action=edit");

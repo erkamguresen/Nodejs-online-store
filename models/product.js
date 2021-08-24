@@ -50,12 +50,13 @@ const products = [
 ];
 
 module.exports = class Product {
-  constructor(name, price, imageURL, description) {
+  constructor(name, price, imageURL, description, categoryId) {
     this.id = (Math.floor(Math.random() * 99999) + 1).toString();
     this.name = name;
     this.price = price;
     this.imageURL = imageURL;
     this.description = description;
+    this.categoryId = categoryId;
   }
 
   saveProduct() {
@@ -80,9 +81,7 @@ module.exports = class Product {
 
   static updateProduct(product) {
     const index = products.findIndex((data) => data.id === product.id);
-    console.log(products);
-    console.log(product);
-    console.log(products[index]);
+
     products[index] = product;
   }
 
