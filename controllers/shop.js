@@ -50,14 +50,17 @@ exports.getProductsByCategoryId = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
-  const productId = req.params.productId;
-  const product = Product.getProductById(productId);
-
-  res.render("shop/product-detail", {
-    title: product.name,
-    product: product,
-    path: "/products",
-  });
+  Product.getProductById(req.params.productId)
+    .then((product) => {
+      res.render("shop/product-detail", {
+        title: product[0][0].name,
+        product: product[0][0],
+        path: "/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getProductDetails = (req, res, next) => {

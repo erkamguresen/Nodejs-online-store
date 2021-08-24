@@ -15,7 +15,9 @@ module.exports = class Product {
     return connection.execute("SELECT * FROM products");
   }
 
-  static getProductById(id) {}
+  static getProductById(id) {
+    return connection.execute("SELECT * FROM products WHERE id = ?", [id]);
+  }
 
   static getProductsByCategoryId(categoryId) {}
 
