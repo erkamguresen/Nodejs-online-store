@@ -82,6 +82,12 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.postDeleteProduct = (req, res, next) => {
-  Product.deleteProductById(req.body.productId);
-  res.redirect("/admin/products?action=delete");
+  console.log(req.body.id);
+  Product.deleteProductById(req.body.id)
+    .then(() => {
+      res.redirect("/admin/products?action=delete");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
