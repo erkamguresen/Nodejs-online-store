@@ -1,15 +1,15 @@
 mixin createProduct(product)
     .col-md-4
-        .card
-            img.card-img-top(src=`/img/${product.imageURL}` alt=`${product.description}`)
+        .card.mt-3
+            img.card-img-top.mt-2(src=`/img/${product.imageURL}` alt=`${product.description}`)
             .card-body
                 h4.card-title
                     a(href=`/products/${product.id}`) #{product.name}
 
                 p.card-text.pt-2 #{product.description}     
                 
-                small.text-muted
-                    i.fas.fa-euro-sign #{product.price}
+                small.text-muted #{product.price} 
+                    i.fas.fa-euro-sign  
 
             .card-footer.text-center
 

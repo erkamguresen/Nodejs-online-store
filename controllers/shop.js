@@ -2,27 +2,37 @@ const Product = require("../models/product");
 const Category = require("../models/category");
 
 exports.getIndex = (req, res, next) => {
-  const products = Product.getAll();
   const categories = Category.getAllCategories();
 
-  res.render("shop/index", {
-    title: "Shopping",
-    products: products,
-    categories: categories,
-    path: "/",
-  });
+  Product.getAllProducts()
+    .then((products) => {
+      res.render("shop/index", {
+        title: "Shopping",
+        products: products[0],
+        categories: categories,
+        path: "/",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getProducts = (req, res, next) => {
-  const products = Product.getAll();
   const categories = Category.getAllCategories();
 
-  res.render("shop/products", {
-    title: "Products",
-    products: products,
-    categories: categories,
-    path: "/products",
-  });
+  Product.getAllProducts()
+    .then((products) => {
+      res.render("shop/products", {
+        title: "Products",
+        products: products[0],
+        categories: categories,
+        path: "/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getProductsByCategoryId = (req, res, next) => {
@@ -51,7 +61,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getProductDetails = (req, res, next) => {
-  const products = Product.getAll();
+  const products = Product.getAllProducts();
 
   res.render("shop/details", {
     title: "Details",
@@ -61,7 +71,7 @@ exports.getProductDetails = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  const products = Product.getAll();
+  const products = Product.getAllProducts();
 
   res.render("shop/cart", {
     title: "Cart",
@@ -70,7 +80,7 @@ exports.getCart = (req, res, next) => {
   });
 };
 exports.getOrders = (req, res, next) => {
-  const products = Product.getAll();
+  const products = Product.getAllProducts();
 
   res.render("shop/orders", {
     title: "Orders",
