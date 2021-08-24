@@ -1,10 +1,19 @@
-const mysql = require("mysql2");
+// const mysql = require("mysql2");
 
-const connection = mysql.createConnection({
+// const connection = mysql.createConnection({
+//   host: "localhost",
+//   user: "sammy",
+//   password: "password",
+//   database: "node-app",
+// });
+
+// module.exports = connection.promise();
+
+const Sequelize = require("sequelize");
+
+const sequelize = new Sequelize("node-app", "sammy", "password", {
   host: "localhost",
-  user: "sammy",
-  password: "password",
-  database: "node-app",
+  dialect: "mysql",
 });
 
-module.exports = connection.promise();
+module.exports = sequelize;
