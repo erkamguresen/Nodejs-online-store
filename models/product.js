@@ -26,7 +26,20 @@ module.exports = class Product {
 
   static getProductsByCategoryId(categoryId) {}
 
-  static updateProduct(product) {}
+  static updateProduct(product) {
+    return connection.execute(
+      `UPDATE products SET products.name = ?, 
+    products.price = ?, products.imageURL = ?, 
+    products.description = ? WHERE products.id = ?`,
+      [
+        product.name,
+        product.price,
+        product.imageURL,
+        product.description,
+        product.id,
+      ]
+    );
+  }
 
   static deleteProductById(productId) {}
 };

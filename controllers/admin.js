@@ -48,7 +48,7 @@ exports.postAddProduct = (req, res, next) => {
 exports.getEditProduct = (req, res, next) => {
   const categories = Category.getAllCategories();
 
-  Product.getAllProducts()
+  Product.getProductById(req.params.productId)
     .then((products) => {
       res.render("admin/edit-product", {
         title: "Edit Product",
@@ -63,16 +63,22 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  const product = Product.getProductById(req.body.id);
+  const product = new Product();
 
+  product.id = req.body.id;
   product.name = req.body.name;
   product.price = req.body.price;
   product.imageURL = req.body.imageURL;
   product.description = req.body.description;
   product.categoryId = req.body.categoryId;
 
-  Product.updateProduct(product);
-  res.redirect("/admin/products?action=edit");
+  Product.updateProduct(product)
+    .then(() => {
+      res.redirect("/admin/products?action=edit");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.postDeleteProduct = (req, res, next) => {
