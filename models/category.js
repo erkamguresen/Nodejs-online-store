@@ -1,8 +1,4 @@
-const categories = [
-  { id: "1", name: "Phone", decription: "Phone category products" },
-  { id: "2", name: "Computer", decription: "Computer category products" },
-  { id: "3", name: "Appliances", decription: "Appliances category products" },
-];
+const connection = require("../utilities/database");
 
 module.exports = class Category {
   constructor(name, description) {
@@ -12,21 +8,28 @@ module.exports = class Category {
   }
 
   saveCategory() {
-    categories.push(this);
+    return connection.execute(
+      "INSERT INTO categories ( name, description) VALUES (?, ?)",
+      [this.name, this.description]
+    );
   }
 
   static getAllCategories() {
-    return categories;
+    return connection.execute("SELECT * FROM categories");
   }
 
   static getCategoryById(id) {
-    return categories.find((cat) => cat.id === id);
+    return connection.execute("SELECT * FROM categories WHERE id = ?", [id]);
   }
 
   static updateCategory(category) {
-    const index = products.findIndex((data) => data.id === category.id);
-    if (index > -1) {
-      categories[index] = category;
-    }
+    return connection.execute(
+      "UPDATE categories SET categories.name = ?, categories.description = ? WHERE id = ?",
+      [category.name, category.description, category.id]
+    );
+  }
+
+  static deleteCategory(id) {
+    return connection.execute("DELETE FROM categories WHERE id = ?", [id]);
   }
 };

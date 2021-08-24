@@ -11,8 +11,8 @@ module.exports = class Product {
 
   saveProduct() {
     return connection.execute(
-      "INSERT INTO products (name, price, imageURL, description) VALUES (?, ?, ?, ?)",
-      [this.name, this.price, this.imageURL, this.description]
+      "INSERT INTO products (name, price, imageURL, description, categoryId) VALUES (?, ?, ?, ?,?)",
+      [this.name, this.price, this.imageURL, this.description, this.categoryId]
     );
   }
 
@@ -24,18 +24,23 @@ module.exports = class Product {
     return connection.execute("SELECT * FROM products WHERE id = ?", [id]);
   }
 
-  static getProductsByCategoryId(categoryId) {}
+  static getProductsByCategoryId(categoryId) {
+    return connection.execute(`SELECT * FROM products WHERE categoryId = ?`, [
+      categoryId,
+    ]);
+  }
 
   static updateProduct(product) {
     return connection.execute(
       `UPDATE products SET products.name = ?, 
     products.price = ?, products.imageURL = ?, 
-    products.description = ? WHERE products.id = ?`,
+    products.description = ?, products.categoryId = ? WHERE products.id = ?`,
       [
         product.name,
         product.price,
         product.imageURL,
         product.description,
+        product.categoryId,
         product.id,
       ]
     );

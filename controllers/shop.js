@@ -2,15 +2,15 @@ const Product = require("../models/product");
 const Category = require("../models/category");
 
 exports.getIndex = (req, res, next) => {
-  const categories = Category.getAllCategories();
-
   Product.getAllProducts()
     .then((products) => {
-      res.render("shop/index", {
-        title: "Shopping",
-        products: products[0],
-        categories: categories,
-        path: "/",
+      Category.getAllCategories().then((categories) => {
+        res.render("shop/index", {
+          title: "Shopping",
+          products: products[0],
+          categories: categories[0],
+          path: "/",
+        });
       });
     })
     .catch((err) => {
@@ -19,15 +19,15 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  const categories = Category.getAllCategories();
-
   Product.getAllProducts()
     .then((products) => {
-      res.render("shop/products", {
-        title: "Products",
-        products: products[0],
-        categories: categories,
-        path: "/products",
+      Category.getAllCategories().then((categories) => {
+        res.render("shop/products", {
+          title: "Products",
+          products: products[0],
+          categories: categories[0],
+          path: "/products",
+        });
       });
     })
     .catch((err) => {
@@ -37,15 +37,17 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProductsByCategoryId = (req, res, next) => {
   const categoryId = req.params.categoryId;
-  const products = Product.getProductsByCategoryId(categoryId);
-  const categories = Category.getAllCategories();
 
-  res.render("shop/products", {
-    title: "Products",
-    products: products,
-    categories: categories,
-    selectedCategory: categoryId,
-    path: "/products",
+  Product.getProductsByCategoryId(categoryId).then((products) => {
+    Category.getAllCategories().then((categories) => {
+      res.render("shop/products", {
+        title: "Products",
+        products: products[0],
+        categories: categories[0],
+        selectedCategory: parseInt(categoryId),
+        path: "/products",
+      });
+    });
   });
 };
 
