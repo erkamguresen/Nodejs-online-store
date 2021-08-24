@@ -9,7 +9,12 @@ module.exports = class Product {
     this.categoryId = categoryId;
   }
 
-  saveProduct() {}
+  saveProduct() {
+    return connection.execute(
+      "INSERT INTO products (name, price, imageURL, description) VALUES (?, ?, ?, ?)",
+      [this.name, this.price, this.imageURL, this.description]
+    );
+  }
 
   static getAllProducts() {
     return connection.execute("SELECT * FROM products");
