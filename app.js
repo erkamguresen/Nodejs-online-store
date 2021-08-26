@@ -9,6 +9,15 @@ const userRoutes = require("./routes/shop");
 const path = require("path");
 const errorController = require("./controllers/errors");
 
+const sequelize = require("./utilities/database");
+
+sequelize
+  .sync()
+  .then((result) => {
+    console.log("Database synced\n", result);
+  })
+  .catch((error) => console.log(error));
+
 app.set("view engine", "pug");
 app.set("views", "./views");
 
