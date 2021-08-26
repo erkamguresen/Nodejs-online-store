@@ -17,11 +17,19 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getAddProduct = (req, res, next) => {
-  res.render("admin/add-product", {
-    title: "New Product",
-    path: "/admin/add-product",
-    // categories: categories[0],
+  Category.findAll().then((categories) => {
+    res.render("admin/add-product", {
+      title: "New Product",
+      path: "/admin/add-product",
+      categories: categories,
+    });
   });
+
+  // res.render("admin/add-product", {
+  //   title: "New Product",
+  //   path: "/admin/add-product",
+  //   // categories: categories[0],
+  // });
 
   // Category.getAllCategories()
   //   .then((categories) => {
@@ -41,47 +49,21 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const imageURL = req.body.imageURL;
   const description = req.body.description;
-  // const categoryId = req.body.categoryId
+  const categoryId = req.body.categoryId;
 
-  // Product.create({
-  //   name: name,
-  //   price: price,
-  //   imageURL: imageURL,
-  //   description: description,
-  // })
-  //   .then((result) => {
-  //     console.log(result);
-  //     res.redirect("/");
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
-
-  const prd = Product.build({
+  Product.create({
     name: name,
     price: price,
     imageURL: imageURL,
     description: description,
-  });
-
-  prd
-    .save()
+    categoryId: categoryId,
+  })
     .then((result) => {
-      console.log(result);
       res.redirect("/");
     })
     .catch((err) => {
       console.log(err);
     });
-
-  // product
-  //   .saveProduct()
-  //   .then(() => {
-  //     res.redirect("/admin/products");
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
 };
 
 exports.getEditProduct = (req, res, next) => {
@@ -145,14 +127,4 @@ exports.postDeleteProduct = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
-
-  // Product.destroy({
-  //   where: { id: req.body.id },
-  // })
-  //   .then(() => {
-  //     res.redirect("/admin/products?action=delete");
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
 };

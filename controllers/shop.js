@@ -49,18 +49,26 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProductsByCategoryId = (req, res, next) => {
   const categoryId = req.params.categoryId;
+  const model = [];
 
-  Product.getProductsByCategoryId(categoryId).then((products) => {
-    Category.getAllCategories().then((categories) => {
+  Category.findAll()
+    .then((categories) => {
+      model.categories = categories;
+      const category = categories.find((i) => i.id == categoryId);
+      return category.getProducts();
+    })
+    .then((products) => {
       res.render("shop/products", {
         title: "Products",
-        products: products[0],
-        categories: categories[0],
+        products: products,
+        categories: model.categories,
         selectedCategory: parseInt(categoryId),
         path: "/products",
       });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 exports.getProduct = (req, res, next) => {
