@@ -17,36 +17,71 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getAddProduct = (req, res, next) => {
-  Category.getAllCategories()
-    .then((categories) => {
-      res.render("admin/add-product", {
-        title: "New Product",
-        path: "/admin/add-product",
-        categories: categories[0],
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  res.render("admin/add-product", {
+    title: "New Product",
+    path: "/admin/add-product",
+    // categories: categories[0],
+  });
+
+  // Category.getAllCategories()
+  //   .then((categories) => {
+  //     res.render("admin/add-product", {
+  //       title: "New Product",
+  //       path: "/admin/add-product",
+  //       categories: categories[0],
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 exports.postAddProduct = (req, res, next) => {
-  const product = new Product(
-    req.body.name,
-    req.body.price,
-    req.body.imageURL,
-    req.body.description,
-    req.body.categoryId
-  );
+  const name = req.body.name;
+  const price = req.body.price;
+  const imageURL = req.body.imageURL;
+  const description = req.body.description;
+  // const categoryId = req.body.categoryId
 
-  product
-    .saveProduct()
-    .then(() => {
-      res.redirect("/admin/products");
+  // Product.create({
+  //   name: name,
+  //   price: price,
+  //   imageURL: imageURL,
+  //   description: description,
+  // })
+  //   .then((result) => {
+  //     console.log(result);
+  //     res.redirect("/");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+
+  const prd = Product.build({
+    name: name,
+    price: price,
+    imageURL: imageURL,
+    description: description,
+  });
+
+  prd
+    .save()
+    .then((result) => {
+      console.log(result);
+      res.redirect("/");
     })
     .catch((err) => {
       console.log(err);
     });
+
+  // product
+  //   .saveProduct()
+  //   .then(() => {
+  //     res.redirect("/admin/products");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 exports.getEditProduct = (req, res, next) => {
