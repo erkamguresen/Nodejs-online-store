@@ -2,7 +2,9 @@ const Product = require("../models/product");
 const Category = require("../models/category");
 
 exports.getIndex = (req, res, next) => {
-  Product.findAll()
+  Product.findAll({
+    attributes: ["id", "name", "price", "imageURL", "description"],
+  })
     .then((products) => {
       Category.findAll().then((categories) => {
         res.render("shop/index", {
@@ -19,7 +21,9 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  Product.findAll({
+    attributes: ["id", "name", "price", "imageURL", "description"],
+  })
     .then((products) => {
       Category.findAll().then((categories) => {
         res.render("shop/products", {
@@ -52,11 +56,16 @@ exports.getProductsByCategoryId = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
-  Product.getProductById(req.params.productId)
-    .then((product) => {
+  // Product.findByPk(req.params.productId)
+  Product.findAll({
+    attributes: ["id", "name", "price", "imageURL", "description"],
+    where: { id: req.params.productId },
+  })
+    .then((products) => {
+      // .then((product) => {
       res.render("shop/product-detail", {
-        title: product[0][0].name,
-        product: product[0][0],
+        title: products[0].name,
+        product: products[0],
         path: "/products",
       });
     })
