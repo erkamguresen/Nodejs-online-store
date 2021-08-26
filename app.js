@@ -11,8 +11,19 @@ const errorController = require("./controllers/errors");
 
 const sequelize = require("./utilities/database");
 
+const Category = require("./models/category");
+const Product = require("./models/product");
+
+Product.belongsTo(Category, {
+  foreignKey: {
+    allowNull: false,
+  },
+});
+
+Category.hasMany(Product);
+
 sequelize
-  .sync()
+  .sync({ force: true })
   .then((result) => {
     console.log("Database synced\n", result);
   })

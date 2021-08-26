@@ -132,12 +132,27 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.postDeleteProduct = (req, res, next) => {
-  console.log(req.body.id);
-  Product.deleteProductById(req.body.id)
+  const id = req.body.id;
+
+  Product.findByPk(id)
+    .then((product) => {
+      return product.destroy();
+    })
     .then(() => {
+      console.log("product has been deleted");
       res.redirect("/admin/products?action=delete");
     })
     .catch((err) => {
       console.log(err);
     });
+
+  // Product.destroy({
+  //   where: { id: req.body.id },
+  // })
+  //   .then(() => {
+  //     res.redirect("/admin/products?action=delete");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
