@@ -13,6 +13,7 @@ const sequelize = require("./utilities/database");
 
 const Category = require("./models/category");
 const Product = require("./models/product");
+const User = require("./models/user");
 
 Product.belongsTo(Category, {
   foreignKey: {
@@ -22,23 +23,39 @@ Product.belongsTo(Category, {
 
 Category.hasMany(Product);
 
+Product.belongsTo(User);
+User.hasMany(Product);
+
 sequelize
-  //.sync({ force: true })
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then(() => {
-    Category.count().then((count) => {
-      if (count === 0) {
-        Category.bulkCreate([
-          { name: "Phone", description: "Phone description" },
-          { name: "Tablet", description: "Tablet description" },
-          { name: "Laptop", description: "Laptop description" },
-          { name: "Electronics", description: "Electronics description" },
-        ]);
-      }
-    });
+    User.findByPk(1)
+      .then((user) => {
+        if (!user) {
+          User.create({
+            name: "John",
+            email: "john@example.com",
+          });
+        }
+        return user;
+      })
+      .then((user) => {
+        Category.count().then((count) => {
+          if (count === 0) {
+            Category.bulkCreate([
+              { name: "Phone", description: "Phone description" },
+              { name: "Tablet", description: "Tablet description" },
+              { name: "Laptop", description: "Laptop description" },
+              { name: "Electronics", description: "Electronics description" },
+            ]);
+          }
+        });
+      });
   })
   .then(() => {
     Product.count().then((count) => {
+      /*
       if (count === 0) {
         Product.bulkCreate([
           {
@@ -91,7 +108,8 @@ sequelize
             categoryId: 3,
           },
         ]);
-      }
+        
+      }*/
     });
   })
   .catch((error) => console.log(error));
