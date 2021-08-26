@@ -2,13 +2,13 @@ const Product = require("../models/product");
 const Category = require("../models/category");
 
 exports.getIndex = (req, res, next) => {
-  Product.getAllProducts()
+  Product.findAll()
     .then((products) => {
-      Category.getAllCategories().then((categories) => {
+      Category.findAll().then((categories) => {
         res.render("shop/index", {
           title: "Shopping",
-          products: products[0],
-          categories: categories[0],
+          products: products,
+          categories: categories,
           path: "/",
         });
       });
@@ -19,13 +19,13 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.getAllProducts()
+  Product.findAll()
     .then((products) => {
-      Category.getAllCategories().then((categories) => {
+      Category.findAll().then((categories) => {
         res.render("shop/products", {
           title: "Products",
-          products: products[0],
-          categories: categories[0],
+          products: products,
+          categories: categories,
           path: "/products",
         });
       });

@@ -2,11 +2,11 @@ const Product = require("../models/product");
 const Category = require("../models/category");
 
 exports.getProducts = (req, res, next) => {
-  Product.getAllProducts()
+  Product.findAll()
     .then((products) => {
       res.render("admin/products", {
         title: "Admin Products",
-        products: products[0],
+        products: products,
         path: "/admin/products",
         action: req.query.action,
       });
