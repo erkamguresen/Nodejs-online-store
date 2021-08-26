@@ -6,14 +6,18 @@ exports.getIndex = (req, res, next) => {
     attributes: ["id", "name", "price", "imageURL", "description"],
   })
     .then((products) => {
-      Category.findAll().then((categories) => {
-        res.render("shop/index", {
-          title: "Shopping",
-          products: products,
-          categories: categories,
-          path: "/",
+      Category.findAll()
+        .then((categories) => {
+          res.render("shop/index", {
+            title: "Shopping",
+            products: products,
+            categories: categories,
+            path: "/",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      });
     })
     .catch((err) => {
       console.log(err);
@@ -25,14 +29,18 @@ exports.getProducts = (req, res, next) => {
     attributes: ["id", "name", "price", "imageURL", "description"],
   })
     .then((products) => {
-      Category.findAll().then((categories) => {
-        res.render("shop/products", {
-          title: "Products",
-          products: products,
-          categories: categories,
-          path: "/products",
+      Category.findAll()
+        .then((categories) => {
+          res.render("shop/products", {
+            title: "Products",
+            products: products,
+            categories: categories,
+            path: "/products",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      });
     })
     .catch((err) => {
       console.log(err);
