@@ -16,6 +16,8 @@ const Product = require("./models/product");
 const User = require("./models/user");
 const Cart = require("./models/cart");
 const CartItem = require("./models/cartItem");
+const Order = require("./models/order");
+const OrderItem = require("./models/orderItem");
 
 Product.belongsTo(Category, {
   foreignKey: {
@@ -26,6 +28,7 @@ Product.belongsTo(Category, {
 Category.hasMany(Product);
 
 Product.belongsTo(User);
+
 User.hasMany(Product);
 
 User.hasOne(Cart);
@@ -33,6 +36,12 @@ Cart.belongsTo(User);
 
 Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
+
+Order.belongsTo(User);
+User.hasMany(Order);
+
+Order.belongsToMany(Product, { through: OrderItem });
+Product.belongsToMany(Order, { through: OrderItem });
 
 let _user;
 
@@ -86,8 +95,8 @@ sequelize
           price: 1000,
           description: "Iphone X description",
           imageURL: "2.jpg",
-          categoryId: 1,
-          UserId: 1,
+          categoryId: Category.findByPk(1).id,
+          userId: _user.id,
         });
       }
 */
