@@ -21,10 +21,10 @@ const Product = sequelize.define("product", {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  // categoryId: {
-  //   type: Sequelize.INTEGER,
-  //   allowNull: false,
-  // },
+  categoryId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
 });
 
 module.exports = Product;

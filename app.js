@@ -81,20 +81,34 @@ sequelize
     Product.count().then((count) => {
       /*
       if (count === 0) {
+        Product.create({
+          name: "Iphone X",
+          price: 1000,
+          description: "Iphone X description",
+          imageURL: "2.jpg",
+          categoryId: 1,
+          UserId: 1,
+        });
+      }
+*/
+      /*
+      if (count === 0) {
         Product.bulkCreate([
           {
-            name: "iPhone X",
+            name: "IPhone X",
             price: "1299",
             imageURL: "1.jpg",
             description: "iPhone X description",
             categoryId: 1,
+            UserId: 1,
           },
           {
-            name: "iPhone XS",
+            name: "IPhone XS",
             price: "1099",
             imageURL: "2.jpg",
             description: "iPhone XS description",
             categoryId: 1,
+            UserId: 1,
           },
           {
             name: "Samsung S7",
@@ -102,6 +116,7 @@ sequelize
             imageURL: "3.jpg",
             description: "Samsung S7 description",
             categoryId: 1,
+            UserId: 1,
           },
           {
             name: "Samsung S8",
@@ -109,6 +124,7 @@ sequelize
             imageURL: "4.jpg",
             description: "Samsung S8 description",
             categoryId: 1,
+            UserId: 1,
           },
           {
             name: "Samsung Tablet",
@@ -116,6 +132,7 @@ sequelize
             imageURL: "3.jpg",
             description: "Samsung Tablet description",
             categoryId: 2,
+            UserId: 1,
           },
           {
             name: "Samsung Laptop",
@@ -123,6 +140,7 @@ sequelize
             imageURL: "4.jpg",
             description: "Samsung Laptop description",
             categoryId: 3,
+            UserId: 1,
           },
           {
             name: "Samsung Smartwatch",
@@ -130,9 +148,9 @@ sequelize
             imageURL: "3.jpg",
             description: "Samsung Smartwatch description",
             categoryId: 3,
+            UserId: 1,
           },
         ]);
-        
       }*/
     });
   })

@@ -155,6 +155,28 @@ exports.postCart = (req, res, next) => {
     });
 };
 
+exports.postCartDeleteItem = (req, res, next) => {
+  const productId = parseInt(req.body.productId);
+  console.log("product Id", productId);
+
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts({ where: { id: productId } });
+    })
+    .then((products) => {
+      const product = products[0];
+
+      return product.cartItem.destroy();
+    })
+    .then(() => {
+      return res.redirect("/cart");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 exports.getOrders = (req, res, next) => {
   const products = Product.getAllProducts();
 
