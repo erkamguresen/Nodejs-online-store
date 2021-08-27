@@ -27,8 +27,8 @@ Product.belongsTo(User);
 User.hasMany(Product);
 
 sequelize
-  .sync({ force: true })
-  // .sync()
+  // .sync({ force: true })
+  .sync()
   .then(() => {
     User.findByPk(1)
       .then((user) => {
@@ -116,6 +116,18 @@ sequelize
 
 app.set("view engine", "pug");
 app.set("views", "./views");
+
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((error) => {
+      console.log(error);
+      next();
+    });
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
