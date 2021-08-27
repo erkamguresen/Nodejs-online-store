@@ -177,14 +177,18 @@ exports.postCartDeleteItem = (req, res, next) => {
     });
 };
 
-exports.getOrders = (req, res, next) => {
-  const products = Product.getAllProducts();
+exports.getOrders = async (req, res, next) => {
+  try {
+    const orders = await req.user.getOrders({ include: ["products"] });
 
-  res.render("shop/orders", {
-    title: "Orders",
-    products: products,
-    path: "/orders",
-  });
+    res.render("shop/orders", {
+      title: "Orders",
+      path: "/orders",
+      orders: orders,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.postOrder = (req, res, next) => {
@@ -222,12 +226,4 @@ exports.postOrder = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
-
-  const products = Product.getAllProducts();
-
-  res.render("shop/orders", {
-    title: "Orders",
-    products: products,
-    path: "/orders",
-  });
 };
