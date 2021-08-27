@@ -34,21 +34,37 @@ Cart.belongsTo(User);
 Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
 
+let _user;
+
 sequelize
   .sync({ force: true })
   // .sync()
   .then(() => {
     User.findByPk(1)
-      .then((user) => {
+      .then(async (user) => {
         if (!user) {
-          User.create({
+          const newUser = await User.create({
             name: "John",
             email: "john@example.com",
           });
+
+          user = newUser;
         }
+
         return user;
       })
       .then((user) => {
+        _user = user;
+        return _user.getCart();
+      })
+      .then(async (cart) => {
+        if (!cart) {
+          const newCart = await _user.createCart();
+          cart = newCart;
+        }
+        return cart;
+      })
+      .then(() => {
         Category.count().then((count) => {
           if (count === 0) {
             Category.bulkCreate([
