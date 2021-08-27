@@ -1,5 +1,46 @@
 extends ../layouts/main-layout.pug
 
 block content
+    if (action!==undefined && action === 'delete')
+        div.alert.alert-danger The product has been successfully deleted.
+
+    if (action!==undefined && action === 'edit')
+        div.alert.alert-success The product has been successfully updated.
+
+    .row
+        if products.length > 0
+            table.table-bordered 
+                thead 
+                    tr 
+                        th(style='width:100px') Image
+                        th Product Name
+                        th(style='width:150px') Price
+                        th Quantity
+                        th(style='width:133px')
+                tbody
+                    each product in products
+                        tr 
+                            td 
+                                img(src=`/img/${product.imageURL}` width='80')
+                            td #{product.name}   
+                            td #{product.price} €
+                            td #{product.cartItem.quantity}
+                            td
+                                form(action='/delete-cartItem' method='post')
+                                    input(type='hidden' name='id' value=`${product.id}`)
+                                    button(type='submit').btn.btn-danger.btn-sm.m-2 Delete
+                tfoot 
+                    tr
+                        td(colspan='4')
+                            - var total = 0;
+                            each product in products
+                                - total += product.cartItem.quantity * product.price;
+
+                        td #{total} €
+            .text-center
+                a(href='/').btn.btn-primary.m-2 Continue Shopping
+                a(href="/checkout").btn.btn-primary.m-2 Checkout
+        else 
+            h1 No Products
 
 
