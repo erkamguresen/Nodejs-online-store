@@ -1,19 +1,30 @@
-// const mysql = require("mysql2");
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
 
-// const connection = mysql.createConnection({
-//   host: "localhost",
-//   user: "sammy",
-//   password: "password",
-//   database: "node-app",
-// });
+let _db;
 
-// module.exports = connection.promise();
+const mongoConnect = (callback) => {
+  //MongoClient.connect('mongodb://localhost/node-app')
+  MongoClient.connect(
+    "mongodb+srv://node:knnKXzzgEuRRddkL@cluster0.khafc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+  )
+    .then((client) => {
+      console.log("Connected To MongoDB\n");
+      _db = client.db();
+      callback();
+    })
+    .catch((err) => {
+      console.log(err);
+      throw err;
+    });
+};
 
-const Sequelize = require("sequelize");
+const getdb = () => {
+  if (_db) {
+    return _db;
+  }
+  throw "No Database";
+};
 
-const sequelize = new Sequelize("node-app", "sammy", "password", {
-  host: "localhost",
-  dialect: "mysql",
-});
-
-module.exports = sequelize;
+exports.mongoConnect = mongoConnect;
+exports.getdb = getdb;
