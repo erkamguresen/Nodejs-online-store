@@ -6,7 +6,7 @@ block styles
 block content
     form(method="post" action="/admin/products")
 
-        input(type="hidden" name="id" value=`${product.id}`)
+        input(type="hidden" name="id" value=`${product._id}`)
 
         .form-group.row.my-1
             label(for="name").col-sm-3.col-form-label Product Name
@@ -26,13 +26,13 @@ block content
                 input#image(type="text" value=`${product.imageURL}`
                                 name="imageURL").form-control
 
-        .form-group.row.my-1
-            label(for="categoryId").col-sm-3.col-form-label Category Id
-            .col-sm-9
-                select(name="categoryId").form-control#categoryId
-                    option(value="-1") Select Category
-                    each category in categories
-                        option(value=`${category.id}` selected=(category.id === product.categoryId)) #{category.name}
+        //- .form-group.row.my-1
+        //-     label(for="categoryId").col-sm-3.col-form-label Category Id
+        //-     .col-sm-9
+        //-         select(name="categoryId").form-control#categoryId
+        //-             option(value="-1") Select Category
+        //-             each category in categories
+        //-                 option(value=`${category.id}` selected=(category.id === product.categoryId)) #{category.name}
 
         .form-group.row.my-1
             label(for="description").col-sm-3.col-form-label Description
