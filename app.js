@@ -16,7 +16,7 @@ const errorController = require("./controllers/errors");
 const mongoConnect = require("./utilities/database").mongoConnect;
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, process.env.STATIC_DIR)));
 
 app.use((req, res, next) => {
   User.findByUserName("admin").then((user) => {

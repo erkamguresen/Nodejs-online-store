@@ -1,1 +1,1 @@
-web: node app.js
+web: NODE_ENV=production STATIC_DIR=public node app.js
