@@ -1,13 +1,14 @@
-const getDb = require("../utilities/database").getDb;
-const ObjectId = require("mongodb").ObjectId;
-const mongodb = require("mongodb");
+const getDb = require('../utilities/database').getDb;
+const ObjectId = require('mongodb').ObjectId;
+const mongodb = require('mongodb');
 
 class Product {
-  constructor(name, price, description, imageURL, id, userId) {
+  constructor(name, price, description, imageURL, categories, id, userId) {
     this.name = name;
     this.price = price;
     this.description = description;
     this.imageURL = imageURL;
+    this.categories = categories;
     this._id = id ? new mongodb.ObjectId(id) : null;
     this.userId = userId;
   }
@@ -17,10 +18,10 @@ class Product {
 
     if (this._id) {
       db = db
-        .collection("products")
+        .collection('products')
         .updateOne({ _id: this._id }, { $set: this });
     } else {
-      db = db.collection("products").insertOne(this);
+      db = db.collection('products').insertOne(this);
     }
 
     return db
@@ -35,7 +36,7 @@ class Product {
   static findAll() {
     const db = getDb();
     return db
-      .collection("products")
+      .collection('products')
       .find()
       .project({ description: 0 })
       .toArray()
@@ -51,7 +52,7 @@ class Product {
     const db = getDb();
     return (
       db
-        .collection("products")
+        .collection('products')
         .findOne({ _id: new ObjectId(productId) })
         // .toArray()
         .then((product) => {
@@ -66,7 +67,7 @@ class Product {
   static deleteById(productId) {
     const db = getDb();
     return db
-      .collection("products")
+      .collection('products')
       .deleteOne({ _id: new ObjectId(productId) })
       .then((result) => {
         console.log(result);
