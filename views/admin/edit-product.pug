@@ -30,9 +30,14 @@ block content
             label(for="categoryId").col-sm-3.col-form-label Category Id
             .col-sm-9
                 each category in categories
-                    input(type="checkbox" value=`${category._id}` name="categoryIds")
-                    | #{category.name}
-                    br
+                    if category.selected === true
+                        input(type="checkbox" value=`${category._id}` name="categoryIds" checked)
+                        | #{category.name}
+                        br
+                    else
+                        input(type="checkbox" value=`${category._id}` name="categoryIds" )
+                        | #{category.name}
+                        br
 
         .form-group.row.my-1
             label(for="description").col-sm-3.col-form-label Description
