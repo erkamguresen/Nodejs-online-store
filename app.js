@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, static)));
 app.use((req, res, next) => {
   User.findByUserName('admin').then((user) => {
     if (user) {
-      req.user = new User(user.username, user.email, user.cart, user._id);
+      req.user = new User(user.name, user.email, user.cart, user._id);
       console.log(req.user);
       next();
     }
