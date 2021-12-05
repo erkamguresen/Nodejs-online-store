@@ -1,15 +1,13 @@
-const mongodb = require("mongodb");
+const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 
 let _db;
 
 const mongoConnect = (callback) => {
   //MongoClient.connect('mongodb://localhost/node-app')
-  MongoClient.connect(
-    "mongodb+srv://node:knnKXzzgEuRRddkL@cluster0.khafc.mongodb.net/Node?retryWrites=true&w=majority"
-  )
+  MongoClient.connect(process.env.MONGODB_URI)
     .then((client) => {
-      console.log("Connected To MongoDB\n");
+      console.log('Connected To MongoDB\n');
       _db = client.db();
       callback();
     })
@@ -23,7 +21,7 @@ const getDb = () => {
   if (_db) {
     return _db;
   }
-  throw "No Database";
+  throw 'No Database';
 };
 
 module.exports.mongoConnect = mongoConnect;
