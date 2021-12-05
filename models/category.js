@@ -1,20 +1,56 @@
-const Sequelize = require("sequelize");
-const sequelize = require("../utilities/database");
+const getDb = require("../utilities/database").getDb;
+const ObjectId = require("mongodb").ObjectId;
+const mongodb = require("mongodb");
 
-const Category = sequelize.define("category", {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  name: Sequelize.STRING,
-  description: {
-    type: Sequelize.STRING,
-    allowNull: true,
-  },
-});
+class Category {
+  constructor(name, description) {
+    this.name = name;
+    this.description = description;
+  }
 
+  save() {
+    const db = getDb();
+    return db
+      .collection("categories")
+      .insertOne(this)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  static findAll() {
+    const db = getDb();
+    return db
+      .collection("categories")
+      .find()
+      .toArray()
+      .then((categories) => {
+        return categories;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  static getCategoryById(id) {
+    const db = getDb();
+    return (
+      db
+        .collection("categories")
+        .find({ _id: new ObjectId(id) })
+        // .next()
+        .then((category) => {
+          return category;
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    );
+  }
+}
 module.exports = Category;
 
 // const connection = require("../utilities/database");
