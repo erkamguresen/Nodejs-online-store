@@ -1,14 +1,16 @@
-const Product = require("../models/product");
-// const Category = require("../models/category");
+const Product = require('../models/product');
+const Category = require('../models/category');
 
 exports.getIndex = (req, res, next) => {
   Product.findAll()
     .then((products) => {
-      res.render("shop/index", {
-        title: "Shopping",
-        products: products,
-
-        path: "/",
+      Category.findAll().then((categories) => {
+        res.render('shop/index', {
+          title: 'Shopping',
+          products: products,
+          categories: categories,
+          path: '/',
+        });
       });
     })
     .catch((err) => {
@@ -19,11 +21,13 @@ exports.getIndex = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
   Product.findAll()
     .then((products) => {
-      console.log(products);
-      res.render("shop/products", {
-        title: "Products",
-        products: products,
-        path: "/",
+      Category.findAll().then((categories) => {
+        res.render('shop/products', {
+          title: 'Products',
+          products: products,
+          path: '/',
+          categories: categories,
+        });
       });
     })
     .catch((err) => {
@@ -38,16 +42,15 @@ exports.getProductsByCategoryId = (req, res, next) => {
   Category.findAll()
     .then((categories) => {
       model.categories = categories;
-      const category = categories.find((i) => i.id == categoryId);
-      return category.getProducts();
+      return Product.findByCategoryId(categoryId);
     })
     .then((products) => {
-      res.render("shop/products", {
-        title: "Products",
+      res.render('shop/products', {
+        title: 'Products',
         products: products,
         categories: model.categories,
         selectedCategory: parseInt(categoryId),
-        path: "/products",
+        path: '/products',
       });
     })
     .catch((err) => {
@@ -59,10 +62,10 @@ exports.getProduct = (req, res, next) => {
   // Product.findByPk(req.params.productId)
   Product.findById(req.params.productId)
     .then((product) => {
-      res.render("shop/product-detail", {
+      res.render('shop/product-detail', {
         title: product.name,
         product: product,
-        path: "/products",
+        path: '/products',
       });
     })
     .catch((err) => {
@@ -73,10 +76,10 @@ exports.getProduct = (req, res, next) => {
 exports.getProductDetails = (req, res, next) => {
   const products = Product.getAllProducts();
 
-  res.render("shop/details", {
-    title: "Details",
+  res.render('shop/details', {
+    title: 'Details',
     products: products,
-    path: "/details",
+    path: '/details',
   });
 };
 
@@ -87,10 +90,10 @@ exports.getCart = (req, res, next) => {
       return cart
         .getProducts()
         .then((products) => {
-          return res.render("shop/cart", {
-            title: "Cart",
+          return res.render('shop/cart', {
+            title: 'Cart',
             products: products,
-            path: "/cart",
+            path: '/cart',
           });
         })
         .catch((err) => {
@@ -128,7 +131,7 @@ exports.postCart = (req, res, next) => {
       });
     })
     .then((cart) => {
-      return res.redirect("/cart");
+      return res.redirect('/cart');
     })
     .catch((err) => {
       console.log(err);
@@ -137,7 +140,7 @@ exports.postCart = (req, res, next) => {
 
 exports.postCartDeleteItem = (req, res, next) => {
   const productId = parseInt(req.body.productId);
-  console.log("product Id", productId);
+  console.log('product Id', productId);
 
   req.user
     .getCart()
@@ -150,7 +153,7 @@ exports.postCartDeleteItem = (req, res, next) => {
       return product.cartItem.destroy();
     })
     .then(() => {
-      return res.redirect("/cart");
+      return res.redirect('/cart');
     })
     .catch((err) => {
       console.log(err);
@@ -159,11 +162,11 @@ exports.postCartDeleteItem = (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
   try {
-    const orders = await req.user.getOrders({ include: ["products"] });
+    const orders = await req.user.getOrders({ include: ['products'] });
 
-    res.render("shop/orders", {
-      title: "Orders",
-      path: "/orders",
+    res.render('shop/orders', {
+      title: 'Orders',
+      path: '/orders',
       orders: orders,
     });
   } catch (error) {
@@ -197,7 +200,7 @@ exports.postOrder = (req, res, next) => {
           userCart.setProducts(null);
         })
         .then(() => {
-          res.redirect("/orders");
+          res.redirect('/orders');
         })
         .catch((err) => {
           console.log(err);
