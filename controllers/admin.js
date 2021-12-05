@@ -98,7 +98,7 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.postDeleteProduct = (req, res, next) => {
-  const id = req.body.productid;
+  const id = req.body.id;
 
   Product.deleteById(id)
 
