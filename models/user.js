@@ -27,7 +27,10 @@ class User {
     return db
       .collection("Users")
       .findOne({ name: userName })
-      .then((user) => user)
+      .then((user) => {
+        // console.log("found user", user);
+        return user;
+      })
       .catch((err) => console.log(err));
   }
 }

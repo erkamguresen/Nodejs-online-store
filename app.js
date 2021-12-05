@@ -38,10 +38,12 @@ mongoConnect(() => {
       if (!user) {
         user = new User("admin", "admin@vmail.com");
         return user.save();
+      } else {
+        return user;
       }
     })
     .then((user) => {
-      console.log(user);
+      console.log("user name", user);
       app.listen(3000);
     })
     .catch((err) => {
