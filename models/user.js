@@ -20,7 +20,33 @@ class User {
   }
 
   addToCart(product) {
-    // save this.cart.items
+    const updatedCartItems = [...this.cart.items];
+
+    const index = updatedCartItems.findIndex(
+      (cartProduct) =>
+        cartProduct.productId.toString() === product._id.toString()
+    );
+
+    if (index >= 0) {
+      updatedCartItems[index].quantity++;
+    } else {
+      updatedCartItems.push({
+        productId: new mongodb.ObjectId(product._id),
+        quantity: 1,
+        // price: product.price,
+        // title: product.title,
+      });
+    }
+
+    const db = getDb();
+    return db.collection('Users').updateOne(
+      {
+        _id: new mongodb.ObjectId(this._id),
+      },
+      {
+        $set: { cart: { items: updatedCartItems } },
+      }
+    );
   }
 
   static findById(id) {
