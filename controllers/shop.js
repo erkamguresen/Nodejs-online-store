@@ -128,7 +128,7 @@ exports.postCartDeleteItem = (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
   try {
-    const orders = await req.user.getOrders({ include: ['products'] });
+    const orders = await req.user.getOrders();
 
     res.render('shop/orders', {
       title: 'Orders',
@@ -144,7 +144,7 @@ exports.postOrder = (req, res, next) => {
   req.user
     .addOrder()
     .then((result) => {
-      res.redirect('/cart');
+      res.redirect('/orders');
     })
     .catch((err) => {
       console.log(err);
