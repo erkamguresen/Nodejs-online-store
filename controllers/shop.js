@@ -141,36 +141,10 @@ exports.getOrders = async (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-  let userCart;
   req.user
-    .getCart()
-    .then((cart) => {
-      userCart = cart;
-      return cart.getProducts();
-    })
-    .then((products) => {
-      return req.user
-        .createOrder()
-        .then((order) => {
-          order.addProducts(
-            products.map((product) => {
-              product.orderItem = {
-                quantity: product.cartItem.quantity,
-                price: product.price,
-              };
-              return product;
-            })
-          );
-        })
-        .then(() => {
-          userCart.setProducts(null);
-        })
-        .then(() => {
-          res.redirect('/orders');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    .addOrder()
+    .then((result) => {
+      res.redirect('/cart');
     })
     .catch((err) => {
       console.log(err);

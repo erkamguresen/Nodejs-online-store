@@ -81,6 +81,47 @@ class User {
     );
   }
 
+  addOrder() {
+    const db = getDb();
+
+    return this.getCart()
+      .then((products) => {
+        const order = {
+          items: products.map((product) => {
+            return {
+              productId: product._id,
+              name: product.name,
+              price: product.price,
+              imageURL: product.imageURL,
+              userId: product._id,
+              quantity: product.quantity,
+            };
+          }),
+          user: {
+            _id: new mongodb.ObjectId(this._id),
+            name: this.name,
+            email: this.email,
+          },
+          date: new Date().toLocaleString(),
+        };
+
+        return db.collection('orders').insertOne(order);
+      })
+      .then(() => {
+        this.cart = { items: [] };
+        return db.collection('Users').updateOne(
+          {
+            _id: new mongodb.ObjectId(this._id),
+          },
+          {
+            $set: { cart: { items: [] } },
+          }
+        );
+      });
+  }
+
+  getOrders() {}
+
   static findById(id) {
     const db = getDb();
     return db
