@@ -15,8 +15,11 @@ const userRoutes = require("./routes/shop");
 const errorController = require("./controllers/errors");
 const mongoConnect = require("./utilities/database").mongoConnect;
 
+const port = process.env.PORT || 3000;
+const static = process.env.STATIC_DIR || "public";
+
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, process.env.STATIC_DIR)));
+app.use(express.static(path.join(__dirname, static)));
 
 app.use((req, res, next) => {
   User.findByUserName("admin").then((user) => {
@@ -44,7 +47,7 @@ mongoConnect(() => {
     })
     .then((user) => {
       console.log("user name", user);
-      app.listen(3000);
+      app.listen(port);
     })
     .catch((err) => {
       console.log(err);
