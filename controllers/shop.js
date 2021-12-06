@@ -2,7 +2,7 @@ const Product = require('../models/product');
 const Category = require('../models/category');
 
 exports.getIndex = (req, res, next) => {
-  Product.findAll()
+  Product.find()
     .then((products) => {
       Category.findAll().then((categories) => {
         res.render('shop/index', {
@@ -19,7 +19,7 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  Product.find()
     .then((products) => {
       Category.findAll().then((categories) => {
         res.render('shop/products', {

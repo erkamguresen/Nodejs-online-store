@@ -2,7 +2,11 @@ const Product = require('../models/product');
 const Category = require('../models/category');
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  Product.find()
+    // .find({ name : 'Iphone 6', price: 200})
+    // .limit(10)
+    // .sort({ price: -1 })
+    // .select({ name: 1, price: 1, _id: 0 })
     .then((products) => {
       res.render('admin/products', {
         title: 'Admin Products',
