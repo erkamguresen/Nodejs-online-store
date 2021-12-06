@@ -7,6 +7,8 @@ const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const mongoose = require('mongoose');
+
 const User = require('./models/user');
 
 app.set('view engine', 'pug');
@@ -16,14 +18,13 @@ const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/shop');
 
 const errorController = require('./controllers/errors');
-const mongoConnect = require('./utilities/database').mongoConnect;
 
 const port = process.env.PORT || 3000;
 const static = process.env.STATIC_DIR || 'public';
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, static)));
-
+/*
 app.use((req, res, next) => {
   User.findByUserName('admin').then((user) => {
     if (user) {
@@ -33,12 +34,12 @@ app.use((req, res, next) => {
     }
   });
 });
-
+*/
 app.use('/admin', adminRoutes);
 app.use(userRoutes);
 
 app.use(errorController.get404Page);
-
+/*
 mongoConnect(() => {
   User.findByUserName('admin')
     .then((user) => {
@@ -57,3 +58,14 @@ mongoConnect(() => {
       console.log(err);
     });
 });
+*/
+
+mongoose
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
+  .then(() => {
+    console.log('connected to mongoDB');
+    app.listen(port);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
