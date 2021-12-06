@@ -24,7 +24,29 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
+  // eq (equal)
+  // ne (not equal)
+  // gt (greater than)
+  // gte (greater than or equal to)
+  // lt (less than)
+  // lte (less than or equal to)
+  // in
+  // nin (not in)
+
   Product.find()
+    // .find({ price: { $gte: 10, $lte: 20 } })
+    // .find({ price: { $eq: 10} })
+    // .find({ price: { $in: [100, 200, 300]} })
+    // .find({ price: { $gt: 300}, name: { $regex: /^p/i } })
+    // .find({ price: { $gt: 300}, name: "Samsung S6"} })
+    // .find( {$or: [{ price: { $gt: 300}}, {name: "Samsung S6"}]})
+    //starts with
+    // .find({name: /^Samsung/})
+    //ends with
+    // .find({name: /Samsung$/})
+    //contains
+    // .find({name: /.*Samsung.*/})
+
     .then((products) => {
       res.render('shop/products', {
         title: 'Products',
