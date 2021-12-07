@@ -7,7 +7,11 @@ exports.getProducts = (req, res, next) => {
     // .limit(10)
     // .sort({ price: -1 })
     // .select({ name: 1, price: 1, _id: 0 })
+    // join the other table and exclude the id
+    // .populate('userId', 'name -_id cart')
+    .select('name price userId imageURL')
     .then((products) => {
+      // console.log(products);
       res.render('admin/products', {
         title: 'Admin Products',
         products: products,
@@ -54,25 +58,25 @@ exports.postAddProduct = (req, res, next) => {
 exports.getEditProduct = (req, res, next) => {
   Product.findById(req.params.productid)
     .then((product) => {
-      // Category.findAll().then((categories) => {
-      //   categories = categories.map((category) => {
-      //     if (product.categories) {
-      //       product.categories.forEach((item) => {
-      //         if (item == category._id) {
-      //           category.selected = true;
-      //         }
-      //       });
-      //     }
-      //     return category;
-      //   });
+      Category.find().then((categories) => {
+        categories = categories.map((category) => {
+          if (product.categories) {
+            product.categories.forEach((item) => {
+              if (item == category._id) {
+                category.selected = true;
+              }
+            });
+          }
+          return category;
+        });
 
-      res.render('admin/edit-product', {
-        title: 'Edit Product',
-        product: product,
-        path: '/admin/products',
-        // categories: categories,
+        res.render('admin/edit-product', {
+          title: 'Edit Product',
+          product: product,
+          path: '/admin/products',
+          categories: categories,
+        });
       });
-      // });
     })
     .catch((err) => {
       console.log(err);
@@ -173,7 +177,7 @@ exports.postAddCategory = (req, res, next) => {
   const name = req.body.name;
   const description = req.body.description;
 
-  const category = new Category(name, description);
+  const category = new Category({ name, description });
 
   category
     .save()
@@ -187,7 +191,7 @@ exports.postAddCategory = (req, res, next) => {
 };
 
 exports.getCategories = (req, res, next) => {
-  Category.findAll()
+  Category.find()
     .then((categories) => {
       res.render('admin/categories', {
         title: 'Categories',
@@ -220,12 +224,33 @@ exports.postEditCategory = (req, res, next) => {
   const name = req.body.name;
   const description = req.body.description;
 
-  const category = new Category(name, description, id);
-
-  category
-    .save()
+  Category.updateOne(
+    { _id: id },
+    {
+      $set: {
+        name: name,
+        description: description,
+      },
+    }
+  )
     .then((result) => {
       res.redirect('/admin/categories?action=edit');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.postDeleteCategory = (req, res, next) => {
+  const id = req.body.categoryId;
+
+  console.log('category has been tried to deleted.', id);
+
+  Category.findByIdAndRemove(id)
+    .then(() => {
+      console.log('category has been deleted.');
+
+      res.redirect('/admin/categories?action=delete');
     })
     .catch((err) => {
       console.log(err);
