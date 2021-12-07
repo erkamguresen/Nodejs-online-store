@@ -17,6 +17,13 @@ const productSchema = mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  categories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      // required: true,
+    },
+  ],
 });
 
 module.exports = mongoose.model('Product', productSchema); //db collection is automatically 'products'

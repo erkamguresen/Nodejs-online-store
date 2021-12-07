@@ -9,9 +9,8 @@ exports.getProducts = (req, res, next) => {
     // .select({ name: 1, price: 1, _id: 0 })
     // join the other table and exclude the id
     // .populate('userId', 'name -_id cart')
-    .select('name price userId imageURL')
+    .select('name price userId imageURL categories')
     .then((products) => {
-      // console.log(products);
       res.render('admin/products', {
         title: 'Admin Products',
         products: products,
@@ -62,7 +61,7 @@ exports.getEditProduct = (req, res, next) => {
         categories = categories.map((category) => {
           if (product.categories) {
             product.categories.forEach((item) => {
-              if (item == category._id) {
+              if (item.toString() === category._id.toString()) {
                 category.selected = true;
               }
             });
@@ -111,7 +110,7 @@ exports.postEditProduct = (req, res, next) => {
   const price = req.body.price;
   const imageURL = req.body.imageURL;
   const description = req.body.description;
-  // const categories = req.body.categoryIds;
+  const categories = req.body.categoryIds || [];
 
   // update first method
   Product.updateOne(
@@ -122,6 +121,7 @@ exports.postEditProduct = (req, res, next) => {
         price: price,
         description: description,
         imageURL: imageURL,
+        categories: categories,
       },
     }
   )
@@ -182,7 +182,6 @@ exports.postAddCategory = (req, res, next) => {
   category
     .save()
     .then((result) => {
-      console.log(result);
       res.redirect('/admin/categories?action=add');
     })
     .catch((err) => {
@@ -244,12 +243,8 @@ exports.postEditCategory = (req, res, next) => {
 exports.postDeleteCategory = (req, res, next) => {
   const id = req.body.categoryId;
 
-  console.log('category has been tried to deleted.', id);
-
   Category.findByIdAndRemove(id)
     .then(() => {
-      console.log('category has been deleted.');
-
       res.redirect('/admin/categories?action=delete');
     })
     .catch((err) => {

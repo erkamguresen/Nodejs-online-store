@@ -26,18 +26,18 @@ block content
                 input#image(type="text" value=`${product.imageURL}`
                                 name="imageURL").form-control                             
 
-        //- .form-group.row.my-1
-        //-     label(for="categoryId").col-sm-3.col-form-label Category Id
-        //-     .col-sm-9
-        //-         each category in categories
-        //-             if category.selected === true
-        //-                 input(type="checkbox" value=`${category._id}` name="categoryIds" checked)
-        //-                 | #{category.name}
-        //-                 br
-        //-             else
-        //-                 input(type="checkbox" value=`${category._id}` name="categoryIds" )
-        //-                 | #{category.name}
-        //-                 br
+        .form-group.row.my-1
+            label(for="categoryIds").col-sm-3.col-form-label Category 
+            .col-sm-9
+                each category in categories
+                    if category.selected === true
+                        input(type="checkbox" value=`${category._id}` name="categoryIds" checked)
+                        | #{category.name}
+                        br
+                    else
+                        input(type="checkbox" value=`${category._id}` name="categoryIds" )
+                        | #{category.name}
+                        br
 
         .form-group.row.my-1
             label(for="description").col-sm-3.col-form-label Description
