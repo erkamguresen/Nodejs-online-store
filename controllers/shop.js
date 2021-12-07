@@ -67,8 +67,6 @@ exports.getProductsByCategoryId = (req, res, next) => {
       return Product.find({ categories: categoryId });
     })
     .then((products) => {
-      console.log(model.categories);
-      console.log(categoryId);
       res.render('shop/products', {
         title: 'Products',
         products: products,
