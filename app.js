@@ -24,47 +24,44 @@ const static = process.env.STATIC_DIR || 'public';
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, static)));
-/*
+
 app.use((req, res, next) => {
-  User.findByUserName('admin').then((user) => {
+  User.findOne({ name: 'admin' }).then((user) => {
     if (user) {
-      req.user = new User(user.name, user.email, user.cart, user._id);
+      req.user = user;
       console.log(req.user);
       next();
     }
   });
 });
-*/
+
 app.use('/admin', adminRoutes);
 app.use(userRoutes);
 
 app.use(errorController.get404Page);
-/*
-mongoConnect(() => {
-  User.findByUserName('admin')
-    .then((user) => {
-      if (!user) {
-        user = new User('admin', 'admin@vmail.com');
-        return user.save();
-      } else {
-        return user;
-      }
-    })
-    .then((user) => {
-      console.log('user name', user);
-      app.listen(port);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-*/
 
 mongoose
   .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
   .then(() => {
     console.log('connected to mongoDB');
-    app.listen(port);
+
+    User.findOne({ name: 'admin' })
+      .then((user) => {
+        if (!user) {
+          user = new User({
+            name: 'admin',
+            email: 'admin@vmail.com',
+            cart: { items: [] },
+          });
+          return user.save();
+        } else {
+          return user;
+        }
+      })
+      .then((user) => {
+        console.log('user name', user);
+        app.listen(port);
+      });
   })
   .catch((err) => {
     console.log(err);
