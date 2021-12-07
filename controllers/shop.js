@@ -4,19 +4,14 @@ const Category = require('../models/category');
 exports.getIndex = (req, res, next) => {
   Product.find()
     .then((products) => {
-      res.render('shop/index', {
-        title: 'Shopping',
-        products: products,
-        path: '/',
+      Category.find().then((categories) => {
+        res.render('shop/index', {
+          title: 'Shopping',
+          products: products,
+          categories: categories,
+          path: '/',
+        });
       });
-      // Category.findAll().then((categories) => {
-      //   res.render('shop/index', {
-      //     title: 'Shopping',
-      //     products: products,
-      //     categories: categories,
-      //     path: '/',
-      //   });
-      // });
     })
     .catch((err) => {
       console.log(err);
@@ -48,19 +43,13 @@ exports.getProducts = (req, res, next) => {
     // .find({name: /.*Samsung.*/})
 
     .then((products) => {
-      res.render('shop/products', {
-        title: 'Products',
-        products: products,
-        path: '/',
-
-        // Category.findAll().then((categories) => {
-        //   res.render('shop/products', {
-        //     title: 'Products',
-        //     products: products,
-        //     path: '/',
-        //     categories: categories,
-        //   });
-        // });
+      Category.find().then((categories) => {
+        res.render('shop/products', {
+          title: 'Products',
+          products: products,
+          path: '/',
+          categories: categories,
+        });
       });
     })
     .catch((err) => {
@@ -70,19 +59,21 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProductsByCategoryId = (req, res, next) => {
   const categoryId = req.params.categoryId;
-  const model = [];
+  const model = {};
 
-  Category.findAll()
+  Category.find()
     .then((categories) => {
       model.categories = categories;
-      return Product.findByCategoryId(categoryId);
+      return Product.find({ categories: categoryId });
     })
     .then((products) => {
+      console.log(model.categories);
+      console.log(categoryId);
       res.render('shop/products', {
         title: 'Products',
         products: products,
         categories: model.categories,
-        selectedCategory: parseInt(categoryId),
+        selectedCategory: categoryId,
         path: '/products',
       });
     })
