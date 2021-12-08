@@ -86,7 +86,7 @@ exports.postRegister = (req, res, next) => {
         return bcrypt.hash(email + password + process.env.SALT_SECRET, 12);
       })
       .then((hashedPassword) => {
-        console.log(hashedPassword);
+        console.log('hashedPassword', hashedPassword);
 
         const newUser = new User({
           name: name,
@@ -119,5 +119,10 @@ exports.postResetPassword = (req, res, next) => {
 
 exports.getLogout = (req, res, next) => {
   // TODO: Logout
-  res.redirect('/login');
+
+  req.session.destroy((err) => {
+    console.log(err);
+  });
+
+  res.redirect('/');
 };
