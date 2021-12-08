@@ -153,17 +153,17 @@ exports.postCartDeleteItem = (req, res, next) => {
 };
 
 exports.getOrders = async (req, res, next) => {
-  try {
-    const orders = await req.user.getOrders();
-
-    res.render('shop/orders', {
-      title: 'Orders',
-      path: '/orders',
-      orders: orders,
+  Order.find({ 'user.userId': req.user._id })
+    .then((orders) => {
+      res.render('shop/orders', {
+        title: 'Orders',
+        path: '/orders',
+        orders: orders,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  } catch (error) {
-    console.log(error);
-  }
 };
 
 exports.postOrder = (req, res, next) => {
@@ -191,7 +191,7 @@ exports.postOrder = (req, res, next) => {
       return order.save();
     })
     .then(() => {
-      // return req.user.clearCart();
+      return req.user.clearCart();
     })
     .then(() => {
       res.redirect('/orders');
