@@ -8,6 +8,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 const User = require('./models/user');
 
@@ -24,15 +26,26 @@ const port = process.env.PORT || 3000;
 const static = process.env.STATIC_DIR || 'public';
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(
+  session({
+    secret: prcoess.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+  })
+);
 app.use(express.static(path.join(__dirname, static)));
 
 app.use((req, res, next) => {
-  User.findOne({ name: 'admin' }).then((user) => {
-    if (user) {
-      req.user = user;
-      next();
-    }
-  });
+  // User.findOne({ name: 'admin' }).then((user) => {
+  //   if (user) {
+  //     req.user = user;
+  next();
+  //   }
+  // });
 });
 
 app.use('/admin', adminRoutes);
@@ -46,23 +59,23 @@ mongoose
   .then(() => {
     console.log('connected to mongoDB');
 
-    User.findOne({ name: 'admin' })
-      .then((user) => {
-        if (!user) {
-          user = new User({
-            name: 'admin',
-            email: 'admin@vmail.com',
-            cart: { items: [] },
-          });
-          return user.save();
-        } else {
-          return user;
-        }
-      })
-      .then((user) => {
-        console.log('user name', user);
-        app.listen(port);
-      });
+    // User.findOne({ name: 'admin' })
+    //   .then((user) => {
+    //     if (!user) {
+    //       user = new User({
+    //         name: 'admin',
+    //         email: 'admin@vmail.com',
+    //         cart: { items: [] },
+    //       });
+    //       return user.save();
+    //     } else {
+    //       return user;
+    //     }
+    //   })
+    //   .then((user) => {
+    //     console.log('user name', user);
+    app.listen(port);
+    //   });
   })
   .catch((err) => {
     console.log(err);
