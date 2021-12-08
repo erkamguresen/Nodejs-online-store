@@ -108,11 +108,13 @@ exports.getProductDetails = (req, res, next) => {
 
 exports.getCart = (req, res, next) => {
   req.user
-    .getCart()
-    .then((products) => {
+    // .getCart()
+    .populate('cart.items.productId', 'name price imageURL')
+    // .execPopulate()
+    .then((user) => {
       res.render('shop/cart', {
         title: 'Cart',
-        products: products,
+        products: user.cart.items,
         path: '/cart',
       });
     })
@@ -140,7 +142,7 @@ exports.postCartDeleteItem = (req, res, next) => {
   const productId = req.body.productId;
 
   req.user
-    .deleteCartItem(productId)
+    .deleteItemFromCart(productId)
     .then(() => {
       return res.redirect('/cart');
     })

@@ -29,7 +29,6 @@ app.use((req, res, next) => {
   User.findOne({ name: 'admin' }).then((user) => {
     if (user) {
       req.user = user;
-      console.log(req.user);
       next();
     }
   });
