@@ -26,7 +26,9 @@ exports.postLogin = (req, res, next) => {
             req.session.isAuthenticated = true;
             return req.session.save((err) => {
               console.log(err);
-              res.redirect('/');
+              var url = req.session.redirectTo || '/';
+              delete req.session.redirectTo;
+              res.redirect(url);
             });
           }
           return res.redirect('/login');
