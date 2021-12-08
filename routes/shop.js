@@ -1,26 +1,28 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const shopController = require("../controllers/shop");
+const shopController = require('../controllers/shop');
 
-router.get("/", shopController.getIndex);
+console.log('shop routes');
 
-router.get("/products", shopController.getProducts);
+router.get('/', shopController.getIndex);
 
-router.get("/products/:productId", shopController.getProduct);
+router.get('/products', shopController.getProducts);
 
-router.get("/categories/:categoryId", shopController.getProductsByCategoryId);
+router.get('/products/:productId', shopController.getProduct);
 
-router.get("/details", shopController.getProductDetails);
+router.get('/categories/:categoryId', shopController.getProductsByCategoryId);
 
-router.get("/cart", shopController.getCart);
+router.get('/details', shopController.getProductDetails);
 
-router.post("/cart", shopController.postCart);
+router.get('/cart', shopController.getCart);
 
-router.post("/delete-cartItem", shopController.postCartDeleteItem);
+router.post('/cart', shopController.postCart);
 
-router.get("/orders", shopController.getOrders);
+router.post('/delete-cartItem', shopController.postCartDeleteItem);
 
-router.post("/create-order", shopController.postOrder);
+router.get('/orders', shopController.getOrders);
+
+router.post('/create-order', shopController.postOrder);
 
 module.exports = router;

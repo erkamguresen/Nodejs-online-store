@@ -47,12 +47,15 @@ app.use(
 app.use(express.static(path.join(__dirname, static)));
 
 app.use((req, res, next) => {
-  // User.findOne({ name: 'admin' }).then((user) => {
-  //   if (user) {
-  //     req.user = user;
-  next();
-  //   }
-  // });
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
 });
 
 app.use('/admin', adminRoutes);
@@ -66,23 +69,7 @@ mongoose
   .then(() => {
     console.log('connected to mongoDB');
 
-    // User.findOne({ name: 'admin' })
-    //   .then((user) => {
-    //     if (!user) {
-    //       user = new User({
-    //         name: 'admin',
-    //         email: 'admin@vmail.com',
-    //         cart: { items: [] },
-    //       });
-    //       return user.save();
-    //     } else {
-    //       return user;
-    //     }
-    //   })
-    //   .then((user) => {
-    //     console.log('user name', user);
     app.listen(port);
-    //   });
   })
   .catch((err) => {
     console.log(err);

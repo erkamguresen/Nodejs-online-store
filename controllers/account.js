@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
 
 exports.getLogin = (req, res, next) => {
   res.render('account/login', {
@@ -12,13 +13,31 @@ exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  if (email === 'email@gmail.com' && password === 'password') {
-    req.session.isAuthenticated = true;
-    res.redirect('/');
-  } else {
-    req.session.isAuthenticated = false;
-    res.redirect('/login');
-  }
+  User.findOne({ email: email })
+    .then((user) => {
+      if (!user) {
+        return res.redirect('/login');
+      }
+      bcrypt
+        .compare(email + password + process.env.SALT_SECRET, user.password)
+        .then((isMatch) => {
+          if (isMatch) {
+            req.session.user = user;
+            req.session.isAuthenticated = true;
+            return req.session.save((err) => {
+              console.log(err);
+              res.redirect('/');
+            });
+          }
+          return res.redirect('/login');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getRegister = (req, res, next) => {
@@ -31,7 +50,6 @@ exports.getRegister = (req, res, next) => {
 };
 
 exports.postRegister = (req, res, next) => {
-  console.log('postRegister', req.body);
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
@@ -44,9 +62,10 @@ exports.postRegister = (req, res, next) => {
     return res.redirect('/register?error=email-format');
   }
 
-  const passwordRegexp =
-    // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})');
+  const passwordRegexp = new RegExp(
+    '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})'
+  );
+  // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   // new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
 
   if (passwordRegexp.test(password) === false) {
@@ -54,32 +73,34 @@ exports.postRegister = (req, res, next) => {
   }
 
   if (password !== confirmPassword) {
-    console.log('redirect here');
     return res.redirect('/register?error=password-mismatch');
   } else {
-    User.findOne({ email: email }).then((user) => {
-      if (user) {
-        console.log('or redirect here');
-        return res.redirect('/register?error=email-exists');
-      }
+    User.findOne({ email: email })
+      .then((user) => {
+        if (user) {
+          return res.redirect('/register?error=email-exists');
+        }
 
-      const newUser = new User({
-        name: name,
-        email: email,
-        password: password,
-        cart: { items: [] },
-      });
+        return bcrypt.hash(email + password + process.env.SALT_SECRET, 12);
+      })
+      .then((hashedPassword) => {
+        console.log(hashedPassword);
 
-      return newUser
-        .save()
-        .then((result) => {
+        const newUser = new User({
+          name: name,
+          email: email,
+          password: hashedPassword,
+          cart: { items: [] },
+        });
+
+        return newUser.save().then((result) => {
           console.log('User created');
           res.redirect('/login');
-        })
-        .catch((err) => {
-          console.log(err);
         });
-    });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 };
 

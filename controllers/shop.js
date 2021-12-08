@@ -3,7 +3,6 @@ const Category = require('../models/category');
 const Order = require('../models/order');
 
 exports.getIndex = (req, res, next) => {
-  console.log(req.session.isAuthenticated);
   Product.find()
     .then((products) => {
       Category.find().then((categories) => {
@@ -52,6 +51,7 @@ exports.getProducts = (req, res, next) => {
           products: products,
           path: '/',
           categories: categories,
+          isAuthenticated: req.session.isAuthenticated,
         });
       });
     })
@@ -76,6 +76,7 @@ exports.getProductsByCategoryId = (req, res, next) => {
         categories: model.categories,
         selectedCategory: categoryId,
         path: '/products',
+        isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => {
@@ -92,6 +93,7 @@ exports.getProduct = (req, res, next) => {
         title: product.name,
         product: product,
         path: '/products',
+        isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => {
@@ -106,6 +108,7 @@ exports.getProductDetails = (req, res, next) => {
     title: 'Details',
     products: products,
     path: '/details',
+    isAuthenticated: req.session.isAuthenticated,
   });
 };
 
@@ -119,6 +122,7 @@ exports.getCart = (req, res, next) => {
         title: 'Cart',
         products: user.cart.items,
         path: '/cart',
+        isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => {
@@ -161,6 +165,7 @@ exports.getOrders = async (req, res, next) => {
         title: 'Orders',
         path: '/orders',
         orders: orders,
+        isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => {
