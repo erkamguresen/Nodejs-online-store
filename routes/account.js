@@ -3,6 +3,8 @@ const router = express.Router();
 
 const accountController = require('../controllers/account');
 
+console.log('Account routes');
+
 router.get('/login', accountController.getLogin);
 router.post('/login', accountController.postLogin);
 

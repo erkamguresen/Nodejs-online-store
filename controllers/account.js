@@ -4,7 +4,7 @@ exports.getLogin = (req, res, next) => {
   res.render('account/login', {
     pageTitle: 'Login',
     path: '/login',
-    isAuthenticated: req.session.isLoggedIn,
+    isAuthenticated: req.session.isAuthenticated,
   });
 };
 
@@ -25,21 +25,26 @@ exports.getRegister = (req, res, next) => {
   res.render('account/register', {
     pageTitle: 'Register',
     path: '/register',
-    isAuthenticated: req.session.isLoggedIn,
+    isAuthenticated: req.session.isAuthenticated,
+    error: req.query.error,
   });
 };
 
 exports.postRegister = (req, res, next) => {
+  console.log('postRegister', req.body);
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
 
+  console.log(req.body);
   if (password !== confirmPassword) {
-    return res.redirect('/register');
+    console.log('redirect here');
+    return res.redirect('/register?error=password');
   } else {
     User.findOne({ email: email }).then((user) => {
       if (user) {
+        console.log('or redirect here');
         return res.redirect('/register');
       }
 

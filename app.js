@@ -10,8 +10,14 @@ dotenv.config();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const User = require('./models/user');
+
+var store = new MongoDBStore({
+  uri: process.env.MONGODB_URI,
+  collection: 'mySessions',
+});
 
 app.set('view engine', 'pug');
 app.set('views', './views');
@@ -29,12 +35,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   session({
-    secret: prcoess.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
+    store: store,
   })
 );
 app.use(express.static(path.join(__dirname, static)));
