@@ -37,15 +37,30 @@ exports.postRegister = (req, res, next) => {
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
 
-  console.log(req.body);
+  const emailRegexp =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
+  if (emailRegexp.test(email) === false) {
+    return res.redirect('/register?error=email-format');
+  }
+
+  const passwordRegexp =
+    // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})');
+  // new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
+
+  if (passwordRegexp.test(password) === false) {
+    return res.redirect('/register?error=weak-password');
+  }
+
   if (password !== confirmPassword) {
     console.log('redirect here');
-    return res.redirect('/register?error=password');
+    return res.redirect('/register?error=password-mismatch');
   } else {
     User.findOne({ email: email }).then((user) => {
       if (user) {
         console.log('or redirect here');
-        return res.redirect('/register');
+        return res.redirect('/register?error=email-exists');
       }
 
       const newUser = new User({

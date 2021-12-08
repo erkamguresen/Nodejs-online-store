@@ -4,8 +4,17 @@ block styles
     link(rel="stylesheet" href='/css/forms.css')
 
 block content
-    if (error!==undefined && error === 'password')
+    if (error!==undefined && error === 'password-mismatch')
         div.alert.alert-danger The passwords do not match.
+    
+    if (error!==undefined && error === 'weak-password')
+        div.alert.alert-danger Your password is too weak. It must be at least 8 characters long and contain at least one number and at least one capital letter.
+
+    if (error!==undefined && error === 'email-exists')
+        div.alert.alert-danger Your email already exists. Please try again.
+
+    if (error!==undefined && error === 'email-format')
+        div.alert.alert-danger Your email seems to be invalid. Please try again.
 
     form(method="post" action="/register")
         .form-group.row.my-1
