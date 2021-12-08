@@ -16,6 +16,7 @@ app.set('views', './views');
 
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/shop');
+const accountRoutes = require('./routes/account');
 
 const errorController = require('./controllers/errors');
 
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminRoutes);
 app.use(userRoutes);
+app.use(accountRoutes);
 
 app.use(errorController.get404Page);
 
