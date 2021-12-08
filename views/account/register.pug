@@ -4,6 +4,8 @@ block styles
     link(rel="stylesheet" href='/css/forms.css')
 
 block content
+    if errorMessage
+        div.alert.alert-danger.col-sm-7 #{errorMessage}
     if (error!==undefined && error === 'password-mismatch')
         div.alert.alert-danger The passwords do not match.
     

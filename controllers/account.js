@@ -2,11 +2,15 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
 exports.getLogin = (req, res, next) => {
+  const errorMessage = req.session.errorMessage;
+  delete req.session.errorMessage;
+
   res.render('account/login', {
     pageTitle: 'Login',
     path: '/login',
     isAuthenticated: req.session.isAuthenticated,
     // csrfToken: req.csrfToken(), // csrf token added by middelware
+    errorMessage: errorMessage,
   });
 };
 
@@ -17,7 +21,11 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
-        return res.redirect('/login');
+        req.session.errorMessage = 'User not found';
+        req.session.save((err) => {
+          console.log(err);
+          return res.redirect('/login');
+        });
       }
       bcrypt
         .compare(email + password + process.env.SALT_SECRET, user.password)
@@ -32,6 +40,7 @@ exports.postLogin = (req, res, next) => {
               res.redirect(url);
             });
           }
+
           return res.redirect('/login');
         })
         .catch((err) => {
@@ -44,11 +53,15 @@ exports.postLogin = (req, res, next) => {
 };
 
 exports.getRegister = (req, res, next) => {
+  const errorMessage = req.session.errorMessage;
+  delete req.session.errorMessage;
+
   res.render('account/register', {
     pageTitle: 'Register',
     path: '/register',
     isAuthenticated: req.session.isAuthenticated,
     error: req.query.error,
+    errorMessage: errorMessage,
   });
 };
 
@@ -81,7 +94,12 @@ exports.postRegister = (req, res, next) => {
     User.findOne({ email: email })
       .then((user) => {
         if (user) {
-          return res.redirect('/register?error=email-exists');
+          req.session.errorMessage = 'This user already exists.';
+          req.session.save((err) => {
+            console.log(err);
+            return res.redirect('/register');
+          });
+          // return res.redirect('/register?error=email-exists');
         }
 
         return bcrypt.hash(email + password + process.env.SALT_SECRET, 12);
