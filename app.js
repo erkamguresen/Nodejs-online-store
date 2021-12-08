@@ -11,6 +11,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
+const csrf = require('csurf');
 
 const User = require('./models/user');
 
@@ -59,6 +60,9 @@ app.use((req, res, next) => {
     .catch((err) => console.log(err));
 });
 
+app.use(csrf());
+
+//routes
 app.use('/admin', adminRoutes);
 app.use(userRoutes);
 app.use(accountRoutes);

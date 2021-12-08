@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 const accountController = require('../controllers/account');
+const csrf = require('../middleware/csrf');
 
 console.log('Account routes');
+
+router.use(csrf);
 
 router.get('/login', accountController.getLogin);
 router.post('/login', accountController.postLogin);

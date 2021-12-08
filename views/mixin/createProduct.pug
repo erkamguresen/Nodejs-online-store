@@ -16,5 +16,6 @@ mixin createProduct(product)
                 a(href=`/products/${product._id}`).btn.btn-outline-primary.btn-sm.m-2 Details
 
                 form(action='/cart' method='post')
+                    input(type="hidden" name="_csrf" value=`${csrfToken}`)
                     input(type='hidden' name='productId' value=`${product._id}`)
                     button(type='submit').btn.btn-outline-primary.btn-sm.m2 Add to Cart

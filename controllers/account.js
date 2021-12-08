@@ -6,6 +6,7 @@ exports.getLogin = (req, res, next) => {
     pageTitle: 'Login',
     path: '/login',
     isAuthenticated: req.session.isAuthenticated,
+    // csrfToken: req.csrfToken(), // csrf token added by middelware
   });
 };
 
@@ -118,8 +119,6 @@ exports.postResetPassword = (req, res, next) => {
 };
 
 exports.getLogout = (req, res, next) => {
-  // TODO: Logout
-
   req.session.destroy((err) => {
     console.log(err);
   });

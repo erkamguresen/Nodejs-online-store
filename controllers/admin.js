@@ -33,6 +33,7 @@ exports.getAddProduct = (req, res, next) => {
     title: 'New Product',
     path: '/admin/add-product',
     isAuthenticated: req.session.isAuthenticated,
+    // csrfToken: req.csrfToken(), // csrf token added by middelware
   });
 };
 
@@ -179,6 +180,7 @@ exports.getAddCategory = (req, res, next) => {
     title: 'New Category',
     path: '/admin/add-category',
     isAuthenticated: req.session.isAuthenticated,
+    // csrfToken: req.csrfToken(), // csrf token added by middelware
   });
 };
 

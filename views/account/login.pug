@@ -5,6 +5,7 @@ block styles
 
 block content
     form(method="post" action="/login")
+        input(type="hidden" name="_csrf" value=`${csrfToken}`)
         .form-group.row.my-1
             label(for="email").col-sm-3.col-form-label Email
             .col-sm-4

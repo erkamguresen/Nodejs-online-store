@@ -3,8 +3,11 @@ const router = express.Router();
 
 const shopController = require('../controllers/shop');
 const isAuthenticated = require('../middleware/authentication');
+const csrf = require('../middleware/csrf');
 
 console.log('shop routes');
+
+router.use(csrf);
 
 router.get('/', shopController.getIndex);
 
