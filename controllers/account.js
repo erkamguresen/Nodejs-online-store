@@ -23,7 +23,8 @@ exports.postLogin = (req, res, next) => {
       if (!user) {
         req.session.errorMessage = 'User not found';
         req.session.save((err) => {
-          console.log(err);
+          if (err) console.log(err);
+
           return res.redirect('/login');
         });
       }
@@ -39,9 +40,10 @@ exports.postLogin = (req, res, next) => {
               delete req.session.redirectTo;
               res.redirect(url);
             });
+          } else {
+            req.session.errorMessage = 'Wrong password';
+            return res.redirect('/login');
           }
-
-          return res.redirect('/login');
         })
         .catch((err) => {
           console.log(err);
@@ -65,7 +67,7 @@ exports.getRegister = (req, res, next) => {
   });
 };
 
-exports.postRegister = (req, res, next) => {
+exports.postRegister = async (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
@@ -74,37 +76,51 @@ exports.postRegister = (req, res, next) => {
   const emailRegexp =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-  if (emailRegexp.test(email) === false) {
-    return res.redirect('/register?error=email-format');
-  }
-
   const passwordRegexp = new RegExp(
     '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})'
   );
   // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   // new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
 
-  if (passwordRegexp.test(password) === false) {
-    return res.redirect('/register?error=weak-password');
-  }
+  if (emailRegexp.test(email) === false) {
+    req.session.errorMessage = 'Invalid email';
+    req.session.save((err) => {
+      if (err) console.log(err);
 
-  if (password !== confirmPassword) {
-    return res.redirect('/register?error=password-mismatch');
+      return res.redirect('/register');
+    });
+  } else if (passwordRegexp.test(password) === false) {
+    req.session.errorMessage =
+      'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter and one number ';
+    req.session.save((err) => {
+      if (err) console.log(err);
+
+      return res.redirect('/register');
+    });
+  } else if (password !== confirmPassword) {
+    req.session.errorMessage = 'Passwords do not match';
+    req.session.save((err) => {
+      if (err) console.log(err);
+
+      return res.redirect('/register');
+    });
   } else {
-    User.findOne({ email: email })
-      .then((user) => {
-        if (user) {
-          req.session.errorMessage = 'This user already exists.';
-          req.session.save((err) => {
-            console.log(err);
-            return res.redirect('/register');
-          });
-          // return res.redirect('/register?error=email-exists');
-        }
+    try {
+      const user = await User.findOne({ email: email });
 
-        return bcrypt.hash(email + password + process.env.SALT_SECRET, 12);
-      })
-      .then((hashedPassword) => {
+      console.log('user in db', user);
+      if (user) {
+        req.session.errorMessage = 'This user already exists.';
+        req.session.save((err) => {
+          console.log(err);
+          return res.redirect('/register');
+        });
+      } else {
+        const hashedPassword = await bcrypt.hash(
+          email + password + process.env.SALT_SECRET,
+          12
+        );
+
         console.log('hashedPassword', hashedPassword);
 
         const newUser = new User({
@@ -118,10 +134,12 @@ exports.postRegister = (req, res, next) => {
           console.log('User created');
           res.redirect('/login');
         });
-      })
-      .catch((err) => {
+      }
+    } catch {
+      (err) => {
         console.log(err);
-      });
+      };
+    }
   }
 };
 
