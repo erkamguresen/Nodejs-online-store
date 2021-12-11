@@ -49,6 +49,7 @@ exports.postAddProduct = (req, res, next) => {
     description: description,
     imageURL: imageURL,
     userId: req.user, //mongoose add only the id of the user
+    isActive: true,
   });
 
   product
