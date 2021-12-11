@@ -1,5 +1,8 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const sgMail = require('@sendgrid/mail');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.getLogin = (req, res, next) => {
   const errorMessage = req.session.errorMessage;
@@ -133,6 +136,24 @@ exports.postRegister = async (req, res, next) => {
         return newUser.save().then((result) => {
           console.log('User created');
           res.redirect('/login');
+
+          // send a confirmation email
+          const msg = {
+            to: email,
+            from: 'erkamguresen@gmail.com', // Change to your verified sender
+            subject: 'Account created',
+            // text: 'and easy to do anywhere, even with Node.js',
+            html: '<h1>Wellcome to my demo project. Your account is successfully created.</h1>',
+          };
+          sgMail
+            .send(msg)
+            .then(() => {
+              console.log('Email sent');
+            })
+            .catch((error) => {
+              console.error(error);
+              console.error(error.response.body);
+            });
         });
       }
     } catch {
