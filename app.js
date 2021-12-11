@@ -46,7 +46,7 @@ const port = process.env.PORT || 3000;
 const static = process.env.STATIC_DIR || 'public';
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({ storage: storage }).single('imageURL'));
+app.use(multer({ storage: storage }).single('image'));
 app.use(cookieParser());
 app.use(
   session({

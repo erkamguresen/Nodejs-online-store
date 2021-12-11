@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Category = require('../models/category');
+const fs = require('fs');
 
 exports.getProducts = (req, res, next) => {
   Product.find({ userId: req.user._id })
@@ -34,6 +35,11 @@ exports.getAddProduct = (req, res, next) => {
     path: '/admin/add-product',
     isAuthenticated: req.session.isAuthenticated,
     // csrfToken: req.csrfToken(), // csrf token added by middelware
+    inputs: {
+      name: '',
+      price: '',
+      description: '',
+    },
   });
 };
 
@@ -41,16 +47,30 @@ exports.postAddProduct = (req, res, next) => {
   const name = req.body.name;
   const price = req.body.price;
   // const imageURL = req.body.imageURL;
-  const file = req.file;
+  const image = req.file;
   const description = req.body.description;
 
-  console.log('image file', file);
+  if (!image) {
+    return res.status(422).render('admin/add-product', {
+      title: 'New Product',
+      path: '/admin/add-product',
+      isAuthenticated: req.session.isAuthenticated,
+      errorMessage: 'Please upload an image',
+      inputs: {
+        name: name,
+        price: price,
+        description: description,
+      },
+    });
+  }
+
+  console.log('image file', image);
 
   const product = new Product({
     name: name,
     price: price,
     description: description,
-    imageURL: file.filename,
+    imageURL: image.filename,
     // imageURL: imageURL,
     userId: req.user, //mongoose add only the id of the user
     isActive: true,
@@ -128,29 +148,60 @@ exports.postEditProduct = (req, res, next) => {
   const id = req.body.id;
   const name = req.body.name;
   const price = req.body.price;
-  const imageURL = req.body.imageURL;
+  const image = req.file;
   const description = req.body.description;
   const categories = req.body.categoryIds || [];
 
-  // update first method
-  Product.updateOne(
-    { _id: id, userId: req.user._id },
-    {
-      $set: {
-        name: name,
-        price: price,
-        description: description,
-        imageURL: imageURL,
-        categories: categories,
-      },
-    }
-  )
-    .then((result) => {
+  const product = {
+    name: name,
+    price: price,
+    description: description,
+    categories: categories,
+  };
+
+  Product.findOne({ _id: id, userId: req.user._id })
+    .then((product) => {
+      if (!product) {
+        return res.redirect('/admin/products');
+      }
+      product.name = name;
+      product.price = price;
+      product.description = description;
+      product.categories = categories;
+      if (image) {
+        // delete the old image
+        const oldImage = 'public/img/' + product.imageURL;
+        fs.unlink(oldImage, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+
+        product.imageURL = image.filename;
+      }
+
+      return product.save();
+    })
+    .then((product) => {
       res.redirect('/admin/products?action=edit');
     })
     .catch((err) => {
       console.log(err);
     });
+
+  // update first method
+  // Product.updateOne(
+  //   { _id: id, userId: req.user._id },
+  //   {
+  //     $set: product,
+  //   }
+  // )
+  //   .then((result) => {
+  //     res.redirect('/admin/products?action=edit');
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 
   // query first method
   /*
@@ -175,14 +226,35 @@ exports.postEditProduct = (req, res, next) => {
 exports.postDeleteProduct = (req, res, next) => {
   const id = req.body.id;
 
-  Product.deleteOne({ _id: id, userId: req.user._id })
-    // Product.findByIdAndRemove(id)
+  Product.findOne({ _id: id, userId: req.user._id })
+    .then((product) => {
+      if (!product) {
+        return res.redirect('/admin/products');
+      }
+      const oldImage = 'public/img/' + product.imageURL;
+      fs.unlink(oldImage, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+
+      return Product.deleteOne({ _id: id, userId: req.user._id });
+    })
     .then(() => {
       res.redirect('/admin/products?action=delete');
     })
     .catch((err) => {
       console.log(err);
     });
+
+  // Product.deleteOne({ _id: id, userId: req.user._id })
+  //   // Product.findByIdAndRemove(id)
+  //   .then(() => {
+  //     res.redirect('/admin/products?action=delete');
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 exports.getAddCategory = (req, res, next) => {
