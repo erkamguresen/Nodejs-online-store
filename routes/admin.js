@@ -4,11 +4,13 @@ const router = express.Router();
 const adminController = require('../controllers/admin');
 const isAuthenticated = require('../middleware/authentication');
 const csrf = require('../middleware/csrf');
+const isAdmin = require('../middleware/isAdmin');
 
 console.log('Admin routes');
 
 router.use(csrf);
 router.use(isAuthenticated);
+router.use(isAdmin);
 
 router.get('/products', adminController.getProducts);
 

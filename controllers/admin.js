@@ -2,7 +2,7 @@ const Product = require('../models/product');
 const Category = require('../models/category');
 
 exports.getProducts = (req, res, next) => {
-  Product.find()
+  Product.find({ userId: req.user._id })
     // .find({ name : 'Iphone 6', price: 200})
     // .limit(10)
     // .sort({ price: -1 })
@@ -16,7 +16,7 @@ exports.getProducts = (req, res, next) => {
         products: products,
         path: '/admin/products',
         action: req.query.action,
-        isAuthenticated: req.session.isAuthenticated,
+        // isAuthenticated: req.session.isAuthenticated,
       });
     })
     .catch((err) => {
@@ -62,7 +62,13 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getEditProduct = (req, res, next) => {
-  Product.findById(req.params.productid)
+  Product.findOne({ _id: req.params.productid, userId: req.user._id })
+    .then((product) => {
+      if (!product) {
+        return res.redirect('/admin/products');
+      }
+      return product;
+    })
     .then((product) => {
       Category.find().then((categories) => {
         categories = categories.map((category) => {
@@ -123,7 +129,7 @@ exports.postEditProduct = (req, res, next) => {
 
   // update first method
   Product.updateOne(
-    { _id: id },
+    { _id: id, userId: req.user._id },
     {
       $set: {
         name: name,
@@ -164,10 +170,9 @@ exports.postEditProduct = (req, res, next) => {
 exports.postDeleteProduct = (req, res, next) => {
   const id = req.body.id;
 
-  // Product.deleteOne({ _id: id })
-  Product.findByIdAndRemove(id)
+  Product.deleteOne({ _id: id, userId: req.user._id })
+    // Product.findByIdAndRemove(id)
     .then(() => {
-      console.log('product has been deleted.');
       res.redirect('/admin/products?action=delete');
     })
     .catch((err) => {
