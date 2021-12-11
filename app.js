@@ -12,12 +12,25 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
+const multer = require('multer');
 
 const User = require('./models/user');
 
 var store = new MongoDBStore({
   uri: process.env.MONGODB_URI,
   collection: 'mySessions',
+});
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/img');
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+    );
+  },
 });
 
 app.set('view engine', 'pug');
@@ -33,6 +46,7 @@ const port = process.env.PORT || 3000;
 const static = process.env.STATIC_DIR || 'public';
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({ storage: storage }).single('imageURL'));
 app.use(cookieParser());
 app.use(
   session({

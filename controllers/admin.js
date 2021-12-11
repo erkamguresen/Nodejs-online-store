@@ -40,14 +40,18 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
   const name = req.body.name;
   const price = req.body.price;
-  const imageURL = req.body.imageURL;
+  // const imageURL = req.body.imageURL;
+  const file = req.file;
   const description = req.body.description;
+
+  console.log('image file', file);
 
   const product = new Product({
     name: name,
     price: price,
     description: description,
-    imageURL: imageURL,
+    imageURL: file.filename,
+    // imageURL: imageURL,
     userId: req.user, //mongoose add only the id of the user
     isActive: true,
   });

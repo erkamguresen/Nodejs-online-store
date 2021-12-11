@@ -4,8 +4,10 @@ const productSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minLength: 5,
-    maxLength: 255,
+    // minLength: 5,
+    // maxLength: 255,
+    // trim: true,
+    // lowercase: true,
   },
   price: {
     type: Number,
@@ -14,6 +16,8 @@ const productSchema = mongoose.Schema({
     },
     min: 0,
     max: 10000,
+    // get: (value) => Math.round(value), // when getting value from db
+    // set: (value) => Math.round(value), // when setting value to db
   },
   description: { type: String, minLength: 5, maxLength: 2000 },
   imageURL: String,
@@ -33,6 +37,15 @@ const productSchema = mongoose.Schema({
       ref: 'Category',
     },
   ],
+  // tags: {
+  //   type: Array,
+  //   validate: {
+  //     validator: function (value) {
+  //       return value && value.length > 0;
+  //     },
+  //     message: 'A product must have at least one tag.',
+  //   },
+  // },
 });
 
 module.exports = mongoose.model('Product', productSchema); //db collection is automatically 'products'
