@@ -44,11 +44,13 @@ block content
         .form-group.row.my-1
             label(for="description").col-sm-3.col-form-label Description
             .col-sm-9
-                textarea#description.form-control(cols='30' rows='10' 
+                textarea.form-control(id='editor1' cols='30' rows='10' 
                 name="description") #{product.description}
 
         .form-group.row.my-1
             .col-sm-3.offset-sm-3
                 input(type="submit" value="Update Product").btn.btn-primary
         
-        
+block script
+    script(src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js")
+    script(src="/js/script.js")       
