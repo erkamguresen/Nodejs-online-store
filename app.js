@@ -15,6 +15,7 @@ const csrf = require('csurf');
 const multer = require('multer');
 
 const User = require('./models/user');
+const errorLog = require('./middleware/errorLog');
 
 var store = new MongoDBStore({
   uri: process.env.MONGODB_URI,
@@ -81,9 +82,12 @@ app.use('/admin', adminRoutes);
 app.use(userRoutes);
 app.use(accountRoutes);
 
-app.use('/500', errorController.get500Page);
+// app.use('/500', errorController.get500Page);
 app.use(errorController.get404Page);
+
 app.use((error, req, res, next) => {
+  errorLog(error, req);
+
   res.status(500).render('error/500', { title: 'Error' });
 });
 
