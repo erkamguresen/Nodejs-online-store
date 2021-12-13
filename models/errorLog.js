@@ -5,8 +5,12 @@ const errorLogSchema = mongoose.Schema({
     type: Object,
     required: true,
   },
-  req: {
-    type: Object,
+  // request: {
+  //   type: Object,
+  //   required: true,
+  // },
+  message: {
+    type: String,
     required: true,
   },
   date: {

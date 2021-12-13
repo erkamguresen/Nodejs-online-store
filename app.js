@@ -86,9 +86,7 @@ app.use(accountRoutes);
 app.use(errorController.get404Page);
 
 app.use((error, req, res, next) => {
-  errorLog(error, req);
-
-  res.status(500).render('error/500', { title: 'Error' });
+  errorLog(error, req, res, next);
 });
 
 mongoose
