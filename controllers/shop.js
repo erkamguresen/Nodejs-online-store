@@ -16,7 +16,7 @@ exports.getIndex = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -56,7 +56,7 @@ exports.getProducts = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -80,7 +80,7 @@ exports.getProductsByCategoryId = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -97,7 +97,7 @@ exports.getProduct = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -126,7 +126,7 @@ exports.getCart = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -141,7 +141,7 @@ exports.postCart = (req, res, next) => {
       res.redirect('/cart');
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -154,7 +154,7 @@ exports.postCartDeleteItem = (req, res, next) => {
       return res.redirect('/cart');
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -169,7 +169,7 @@ exports.getOrders = async (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -195,7 +195,11 @@ exports.postOrder = (req, res, next) => {
           };
         }),
       });
-      return order.save();
+      return order.save((err) => {
+        if (err) {
+          next(err);
+        }
+      });
     })
     .then(() => {
       return req.user.clearCart();
@@ -204,6 +208,6 @@ exports.postOrder = (req, res, next) => {
       res.redirect('/orders');
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };

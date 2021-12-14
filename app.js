@@ -85,9 +85,7 @@ app.use(accountRoutes);
 // app.use('/500', errorController.get500Page);
 app.use(errorController.get404Page);
 
-app.use((error, req, res, next) => {
-  errorLog(error, req, res, next);
-});
+app.use(errorLog);
 
 mongoose
   .connect(process.env.MONGODB_URI, { useNewUrlParser: true })

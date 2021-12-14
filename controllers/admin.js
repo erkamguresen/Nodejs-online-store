@@ -21,7 +21,7 @@ exports.getProducts = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -63,8 +63,26 @@ exports.postAddProduct = (req, res, next) => {
       },
     });
   }
+  if (!name || !price || !description) {
+    const oldImage = 'public/img/' + image.filename;
+    fs.unlink(oldImage, (err) => {
+      if (err) {
+        next(err);
+      }
+    });
 
-  console.log('image file', image);
+    return res.status(422).render('admin/add-product', {
+      title: 'New Product',
+      path: '/admin/add-product',
+      isAuthenticated: req.session.isAuthenticated,
+      errorMessage: 'Please fill all the fields',
+      inputs: {
+        name: name,
+        price: price,
+        description: description,
+      },
+    });
+  }
 
   const product = new Product({
     name: name,
@@ -117,7 +135,7 @@ exports.getEditProduct = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 
   // Product.findByPk(req.params.productid)
@@ -173,7 +191,7 @@ exports.postEditProduct = (req, res, next) => {
         const oldImage = 'public/img/' + product.imageURL;
         fs.unlink(oldImage, (err) => {
           if (err) {
-            console.log(err);
+            next(err);
           }
         });
 
@@ -186,7 +204,7 @@ exports.postEditProduct = (req, res, next) => {
       res.redirect('/admin/products?action=edit');
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 
   // update first method
@@ -234,7 +252,7 @@ exports.postDeleteProduct = (req, res, next) => {
       const oldImage = 'public/img/' + product.imageURL;
       fs.unlink(oldImage, (err) => {
         if (err) {
-          console.log(err);
+          next(err);
         }
       });
 
@@ -244,7 +262,7 @@ exports.postDeleteProduct = (req, res, next) => {
       res.redirect('/admin/products?action=delete');
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 
   // Product.deleteOne({ _id: id, userId: req.user._id })
@@ -278,7 +296,7 @@ exports.postAddCategory = (req, res, next) => {
       res.redirect('/admin/categories?action=add');
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -294,7 +312,7 @@ exports.getCategories = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -309,7 +327,7 @@ exports.getEditCategory = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -331,7 +349,7 @@ exports.postEditCategory = (req, res, next) => {
       res.redirect('/admin/categories?action=edit');
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 
@@ -343,6 +361,6 @@ exports.postDeleteCategory = (req, res, next) => {
       res.redirect('/admin/categories?action=delete');
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };

@@ -35,7 +35,7 @@ exports.postLogin = (req, res, next) => {
         if (!user) {
           req.session.errorMessage = 'User not found';
           req.session.save((err) => {
-            if (err) console.log(err);
+            if (err) next(err);
 
             return res.redirect('/login');
           });
@@ -47,7 +47,7 @@ exports.postLogin = (req, res, next) => {
               req.session.user = user;
               req.session.isAuthenticated = true;
               return req.session.save((err) => {
-                console.log(err);
+                if (err) next(err);
                 var url = req.session.redirectTo || '/';
                 delete req.session.redirectTo;
                 res.redirect(url);
@@ -92,7 +92,7 @@ exports.postRegister = async (req, res, next) => {
   if (emailRegexp.test(email) === false) {
     req.session.errorMessage = 'Invalid email';
     req.session.save((err) => {
-      if (err) console.log(err);
+      if (err) next(err);
 
       return res.redirect('/register');
     });
@@ -100,14 +100,14 @@ exports.postRegister = async (req, res, next) => {
     req.session.errorMessage =
       'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter and one number ';
     req.session.save((err) => {
-      if (err) console.log(err);
+      if (err) next(err);
 
       return res.redirect('/register');
     });
   } else if (password !== confirmPassword) {
     req.session.errorMessage = 'Passwords do not match';
     req.session.save((err) => {
-      if (err) console.log(err);
+      if (err) next(err);
 
       return res.redirect('/register');
     });
@@ -119,7 +119,7 @@ exports.postRegister = async (req, res, next) => {
       if (user) {
         req.session.errorMessage = 'This user already exists.';
         req.session.save((err) => {
-          console.log(err);
+          if (err) next(err);
           return res.redirect('/register');
         });
       } else {
@@ -156,8 +156,7 @@ exports.postRegister = async (req, res, next) => {
               console.log('Email sent');
             })
             .catch((error) => {
-              console.error(error);
-              console.error(error.response.body);
+              next(error);
             });
         });
       }
@@ -186,7 +185,7 @@ exports.postResetPassword = (req, res, next) => {
       'Error: Please enter your email address to reset your password';
 
     req.session.save((err) => {
-      if (err) console.log(err);
+      if (err) next(err);
 
       return res.redirect('/reset-password');
     });
@@ -206,14 +205,16 @@ exports.postResetPassword = (req, res, next) => {
           if (!user) {
             req.session.errorMessage = 'Error: User not found';
             req.session.save((err) => {
-              if (err) console.log(err);
+              if (err) next(err);
 
               return res.redirect('/reset-password');
             });
           } else {
             user.resetToken = token;
             user.resetTokenExpiration = Date.now() + 3600000;
-            return user.save();
+            return user.save((err) => {
+              next(err);
+            });
           }
         })
         .then((result) => {
@@ -282,14 +283,14 @@ exports.postNewPassword = (req, res, next) => {
     req.session.errorMessage =
       'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter and one number ';
     req.session.save((err) => {
-      if (err) console.log(err);
+      if (err) next(err);
 
       return res.redirect(`/new-password/${passwordToken}`);
     });
   } else if (password !== confirmPassword) {
     req.session.errorMessage = 'Passwords do not match';
     req.session.save((err) => {
-      if (err) console.log(err);
+      if (err) next(err);
 
       return res.redirect(`/new-password/${passwordToken}`);
     });
@@ -316,7 +317,7 @@ exports.postNewPassword = (req, res, next) => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        next(err);
       });
   }
 };
