@@ -41,16 +41,6 @@ const uploadFile = (title, description, contentType, fileName, file) => {
 };
 
 const getFileURL = (assetId) => {
-  console.log(process.env);
-  console.log(
-    'xrv8pfvkz732',
-    process.env.CONTENTFUL_SPACE_ID,
-    'OaC96xvnWJ5jKnPP73pojl1XIG47T6p7OmzFBo0ZAdg',
-    process.env.CONTENTFUL_ACCESS_TOKEN,
-    'preview.contentful.com',
-    process.env.CONTENTFUL_HOST
-  );
-
   const client = contentful.createClient({
     // space: process.env.CONTENTFUL_SPACE_ID,
     // accessToken: 'OaC96xvnWJ5jKnPP73pojl1XIG47T6p7OmzFBo0ZAdg',

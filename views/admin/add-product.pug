@@ -40,6 +40,14 @@ block content
         //-                 option(value=`${category.id}`) #{category.name}
 
         .form-group.row.my-1
+            label(for="categoryIds").col-sm-3.col-form-label Category 
+            .col-sm-9
+                each category in categories
+                    input(type="checkbox" value=`${category._id}` name="categoryIds" )
+                    | #{category.name}
+                    br
+
+        .form-group.row.my-1
             label(for="description").col-sm-3.col-form-label Description
             .col-sm-9
                 textarea.form-control(id='editor1' cols='30' rows='10' 

@@ -36,17 +36,25 @@ exports.getAddProduct = (req, res, next) => {
   //   return res.redirect('/login');
   // }
 
-  res.render('admin/add-product', {
-    title: 'New Product',
-    path: '/admin/add-product',
-    isAuthenticated: req.session.isAuthenticated,
-    // csrfToken: req.csrfToken(), // csrf token added by middelware
-    inputs: {
-      name: '',
-      price: '',
-      description: '',
-    },
-  });
+  Category.find()
+    .then((categories) => {
+      res.render('admin/add-product', {
+        title: 'New Product',
+        path: '/admin/add-product',
+        isAuthenticated: req.session.isAuthenticated,
+        // csrfToken: req.csrfToken(), // csrf token added by middelware
+        inputs: {
+          name: '',
+          price: '',
+          description: '',
+          categories: [],
+        },
+        categories: categories, //TODO: add categories
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.postAddProduct = (req, res, next) => {
@@ -54,6 +62,7 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const image = req.file;
   const description = req.body.description;
+  const categories = req.body.categoryIds;
 
   let contentfulAssetId = null;
 
@@ -119,6 +128,7 @@ exports.postAddProduct = (req, res, next) => {
         userId: req.user, //mongoose add only the id of the user
         isActive: true,
         assetId: contentfulAssetId,
+        categories: categories,
       });
 
       product
