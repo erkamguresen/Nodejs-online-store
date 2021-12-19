@@ -9,6 +9,7 @@ block content
 
     form(method="post" action="/admin/add-product" enctype="multipart/form-data")
         input(type="hidden" name="_csrf" value=`${csrfToken}`)
+
         .form-group.row.my-1
             label(for="name").col-sm-3.col-form-label Product Name
             .col-sm-9

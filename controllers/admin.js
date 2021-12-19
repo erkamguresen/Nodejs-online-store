@@ -57,12 +57,12 @@ exports.getAddProduct = (req, res, next) => {
     });
 };
 
-exports.postAddProduct = (req, res, next) => {
+exports.postAddProduct = async (req, res, next) => {
   const name = req.body.name;
   const price = req.body.price;
   const image = req.file;
   const description = req.body.description;
-  const categories = req.body.categoryIds;
+  const categoryIds = req.body.categoryIds;
 
   let contentfulAssetId = null;
 
@@ -76,16 +76,17 @@ exports.postAddProduct = (req, res, next) => {
         name: name,
         price: price,
         description: description,
+        categories: categoryIds,
       },
+      categories: await Category.find(),
     });
-  }
-  if (!name || !price || !description) {
-    // const oldImage = 'public/img/' + image.filename;
-    // fs.unlink(oldImage, (err) => {
-    //   if (err) {
-    //     next(err);
-    //   }
-    // });
+  } else if (!name || !price || !description) {
+    const oldImage = 'public/img/' + image.filename;
+    fs.unlink(oldImage, (err) => {
+      if (err) {
+        next(err);
+      }
+    });
 
     return res.status(422).render('admin/add-product', {
       title: 'New Product',
@@ -96,53 +97,55 @@ exports.postAddProduct = (req, res, next) => {
         name: name,
         price: price,
         description: description,
+        categoryIds: categoryIds,
       },
+      categories: await Category.find(),
     });
-  }
-
-  // upload the image file
-  uploadFile(
-    'NodeJS-Shop-' + name + Date.now(),
-    'product image',
-    image.mimetype,
-    'NodeJS-Shop-' + Date.now() + path.extname(image.originalname),
-    fs.readFileSync(image.path)
-  )
-    .then((fileId) => {
-      contentfulAssetId = fileId;
-      return getFileURL(fileId);
-    })
-    .then((fileURL) => {
-      fs.unlink(image.path, (err) => {
-        if (err) {
-          console.log(err);
-        }
-      });
-
-      const product = new Product({
-        name: name,
-        price: price,
-        description: description,
-        imageURL: image.filename,
-        imageURL: fileURL,
-        userId: req.user, //mongoose add only the id of the user
-        isActive: true,
-        assetId: contentfulAssetId,
-        categories: categories,
-      });
-
-      product
-        .save()
-        .then(() => {
-          res.redirect('/admin/products');
-        })
-        .catch((err) => {
-          next(err);
+  } else {
+    // upload the image file
+    uploadFile(
+      'NodeJS-Shop-' + name + Date.now(),
+      'product image',
+      image.mimetype,
+      'NodeJS-Shop-' + Date.now() + path.extname(image.originalname),
+      fs.readFileSync(image.path)
+    )
+      .then((fileId) => {
+        contentfulAssetId = fileId;
+        return getFileURL(fileId);
+      })
+      .then((fileURL) => {
+        fs.unlink(image.path, (err) => {
+          if (err) {
+            console.log(err);
+          }
         });
-    })
-    .catch((err) => {
-      next(err);
-    });
+
+        const product = new Product({
+          name: name,
+          price: price,
+          description: description,
+          imageURL: image.filename,
+          imageURL: fileURL,
+          userId: req.user, //mongoose add only the id of the user
+          isActive: true,
+          assetId: contentfulAssetId,
+          categories: categoryIds,
+        });
+
+        product
+          .save()
+          .then(() => {
+            res.redirect('/admin/products');
+          })
+          .catch((err) => {
+            next(err);
+          });
+      })
+      .catch((err) => {
+        next(err);
+      });
+  }
 };
 
 exports.getEditProduct = (req, res, next) => {
