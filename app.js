@@ -34,6 +34,10 @@ const storage = multer.diskStorage({
   },
 });
 
+// TODO write custom storage
+// https://medium.com/@singhcoolish/node-js-file-upload-to-s3-using-multer-custom-storage-engine-292a2e92cf12
+// const storage = multer.memoryStorage();
+
 app.set('view engine', 'pug');
 app.set('views', './views');
 

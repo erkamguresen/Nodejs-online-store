@@ -1,6 +1,12 @@
 const Product = require('../models/product');
 const Category = require('../models/category');
+const {
+  uploadFile,
+  getFileURL,
+  deleteFile,
+} = require('../utilities/mediaStorage');
 const fs = require('fs');
+const path = require('path');
 
 exports.getProducts = (req, res, next) => {
   Product.find({ userId: req.user._id })
@@ -64,12 +70,12 @@ exports.postAddProduct = (req, res, next) => {
     });
   }
   if (!name || !price || !description) {
-    const oldImage = 'public/img/' + image.filename;
-    fs.unlink(oldImage, (err) => {
-      if (err) {
-        next(err);
-      }
-    });
+    // const oldImage = 'public/img/' + image.filename;
+    // fs.unlink(oldImage, (err) => {
+    //   if (err) {
+    //     next(err);
+    //   }
+    // });
 
     return res.status(422).render('admin/add-product', {
       title: 'New Product',
@@ -84,20 +90,40 @@ exports.postAddProduct = (req, res, next) => {
     });
   }
 
-  const product = new Product({
-    name: name,
-    price: price,
-    description: description,
-    imageURL: image.filename,
-    // imageURL: imageURL,
-    userId: req.user, //mongoose add only the id of the user
-    isActive: true,
-  });
+  // upload the image file
+  uploadFile(
+    'NodeJS-Shop-' + name + Date.now(),
+    'product image',
+    image.mimetype,
+    'NodeJS-Shop-' + Date.now() + path.extname(image.originalname),
+    fs.readFileSync(image.path)
+  )
+    .then((fileId) => getFileURL(fileId))
+    .then((fileURL) => {
+      fs.unlink(image.path, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
 
-  product
-    .save()
-    .then(() => {
-      res.redirect('/admin/products');
+      const product = new Product({
+        name: name,
+        price: price,
+        description: description,
+        imageURL: image.filename,
+        imageURL: fileURL,
+        userId: req.user, //mongoose add only the id of the user
+        isActive: true,
+      });
+
+      product
+        .save()
+        .then(() => {
+          res.redirect('/admin/products');
+        })
+        .catch((err) => {
+          next(err);
+        });
     })
     .catch((err) => {
       next(err);
