@@ -37,6 +37,10 @@ const productSchema = mongoose.Schema({
       ref: 'Category',
     },
   ],
+  assetId: {
+    type: String,
+    required: true,
+  },
   // tags: {
   //   type: Array,
   //   validate: {

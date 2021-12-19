@@ -69,6 +69,29 @@ const getFileURL = (assetId) => {
     .catch(console.error);
 };
 
-const deleteFile = () => {};
+const deleteFile = (assetId) => {
+  const client = contentfulManagement.createClient({
+    accessToken: process.env.CONTENTFUL_CONTENT_MANAGEMENT_API_KEY,
+  });
+
+  client
+    .getSpace(process.env.CONTENTFUL_SPACE_ID)
+    .then((space) =>
+      space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT_ID)
+    )
+    .then((environment) => {
+      // console.log(environment);
+      return environment.getAsset(assetId);
+    })
+    // .then((environment) => environment.getUpload('<upload_id>'))
+    .then(async (asset) => {
+      // console.log(asset);
+      await asset.unpublish();
+      // console.log(asset);
+      return asset.delete();
+    })
+    .then(() => console.log('File deleted.'))
+    .catch(console.error);
+};
 
 module.exports = { uploadFile, getFileURL, deleteFile };

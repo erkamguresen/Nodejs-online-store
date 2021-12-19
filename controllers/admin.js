@@ -52,9 +52,10 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
   const name = req.body.name;
   const price = req.body.price;
-  // const imageURL = req.body.imageURL;
   const image = req.file;
   const description = req.body.description;
+
+  let contentfulAssetId = null;
 
   if (!image) {
     return res.status(422).render('admin/add-product', {
@@ -98,7 +99,10 @@ exports.postAddProduct = (req, res, next) => {
     'NodeJS-Shop-' + Date.now() + path.extname(image.originalname),
     fs.readFileSync(image.path)
   )
-    .then((fileId) => getFileURL(fileId))
+    .then((fileId) => {
+      contentfulAssetId = fileId;
+      return getFileURL(fileId);
+    })
     .then((fileURL) => {
       fs.unlink(image.path, (err) => {
         if (err) {
@@ -114,6 +118,7 @@ exports.postAddProduct = (req, res, next) => {
         imageURL: fileURL,
         userId: req.user, //mongoose add only the id of the user
         isActive: true,
+        assetId: contentfulAssetId,
       });
 
       product
@@ -204,7 +209,7 @@ exports.postEditProduct = (req, res, next) => {
   };
 
   Product.findOne({ _id: id, userId: req.user._id })
-    .then((product) => {
+    .then(async (product) => {
       if (!product) {
         return res.redirect('/admin/products');
       }
@@ -214,14 +219,27 @@ exports.postEditProduct = (req, res, next) => {
       product.categories = categories;
       if (image) {
         // delete the old image
-        const oldImage = 'public/img/' + product.imageURL;
-        fs.unlink(oldImage, (err) => {
+        deleteFile(product.assetId);
+
+        // upload the new image
+        const fileId = await uploadFile(
+          'NodeJS-Shop-' + name + Date.now(),
+          'product image',
+          image.mimetype,
+          'NodeJS-Shop-' + Date.now() + path.extname(image.originalname),
+          fs.readFileSync(image.path)
+        );
+
+        product.assetId = fileId;
+
+        const fileURL = await getFileURL(fileId);
+
+        fs.unlink(image.path, (err) => {
           if (err) {
-            next(err);
+            console.log(err);
           }
         });
-
-        product.imageURL = image.filename;
+        product.imageURL = fileURL;
       }
 
       return product.save();
@@ -271,16 +289,12 @@ exports.postDeleteProduct = (req, res, next) => {
   const id = req.body.id;
 
   Product.findOne({ _id: id, userId: req.user._id })
-    .then((product) => {
+    .then(async (product) => {
       if (!product) {
         return res.redirect('/admin/products');
       }
-      const oldImage = 'public/img/' + product.imageURL;
-      fs.unlink(oldImage, (err) => {
-        if (err) {
-          next(err);
-        }
-      });
+
+      deleteFile(product.assetId);
 
       return Product.deleteOne({ _id: id, userId: req.user._id });
     })
