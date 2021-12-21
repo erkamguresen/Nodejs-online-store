@@ -13,7 +13,7 @@ block content
             label(for="name").col-sm-3.col-form-label Name
             .col-sm-4
                 input(type="text" placeholder="Enter your name"
-                                name="name").form-control#email
+                                name="name").form-control#emailLabel
         .form-group.row.my-1
             label(for="email").col-sm-3.col-form-label Email
             .col-sm-4
@@ -30,7 +30,13 @@ block content
             label(for="confirmPassword").col-sm-3.col-form-label Confirm Your Password
             .col-sm-4
                 input(type="password" placeholder="Re-Enter your password"
-                                name="confirmPassword").form-control#password
+                                name="confirmPassword").form-control#confirmPassword
+                
+        .form-group.row.my-1  
+            label(for="categoryIds").col-sm-3.col-form-label Create Merchant (Admin) Account                          
+            .col-sm-4
+                input(type="checkbox" value='merchant' 
+                    name="isMerchant" ).form-check-input#isMerchant
                 
         .form-group.row.my-1
             .col-sm-3.offset-sm-3

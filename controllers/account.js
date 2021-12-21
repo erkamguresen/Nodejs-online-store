@@ -88,6 +88,7 @@ exports.postRegister = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
+  const isMerchant = req.body.isMerchant === 'merchant';
 
   if (emailRegexp.test(email) === false) {
     req.session.errorMessage = 'Invalid email';
@@ -135,6 +136,7 @@ exports.postRegister = async (req, res, next) => {
           email: email,
           password: hashedPassword,
           cart: { items: [] },
+          isAdmin: isMerchant,
         });
 
         return newUser.save().then((result) => {
